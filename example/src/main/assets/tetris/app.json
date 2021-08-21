@@ -1,0 +1,17 @@
+{
+  "appId": "2048",
+  "appName": "俄罗斯方块",
+  "entryPagePath": "index.html",
+  "pages": [
+    "index.html"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#efcc19",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "俄罗斯方块",
+    "backgroundColor": "#efcc19",
+    "backgroundTextStyle": "light",
+    "enablePullDownRefresh": false,
+    "disableScroll": false
+  }
+}

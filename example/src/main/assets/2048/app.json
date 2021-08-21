@@ -1,0 +1,17 @@
+{
+  "appId": "2048",
+  "appName": "2048",
+  "entryPagePath": "index.html",
+  "pages": [
+    "index.html"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#faf8ef",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "2028",
+    "backgroundColor": "#faf8ef",
+    "backgroundTextStyle": "light",
+    "enablePullDownRefresh": false,
+    "disableScroll": false
+  }
+}

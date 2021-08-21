@@ -1,0 +1,7 @@
+rootProject.name = "WebViewX"
+include ':example'
+include ':webviewx'
+//include ':WebViewX-extension'
+
+//include ":navigation"
+//project(":navigation").projectDir = new File("/Users/wiki/Documents/source/navigation/navigation")

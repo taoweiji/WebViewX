@@ -1,0 +1,210 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <script src="webviewx.js"></script>
+    <script>
+        webViewX.registerPageEvent({
+            onLoad: function (options) {
+                // Do some initialize when page load.
+                console.log('onLoad ' + JSON.stringify(options));
+            },
+            onShow: function () {
+                // Do something when page show.
+                console.log('onShow');
+            },
+            onHide: function () {
+                // Do something when page hide.
+                console.log('onHide');
+            },
+            onUnload: function () {
+                // Do something when page close.
+                console.log('onUnload');
+            }
+        })
+        webViewX.registerEvent('event',function (data){
+            alert(JSON.stringify(data));
+        })
+        function getLoginInfo() {
+            webViewX.invoke('getLoginInfo', {
+                success(res) {
+                    alert(JSON.stringify(res))
+                }
+            })
+        }
+        function finish() {
+            webViewX.invoke('finish')
+        }
+        function getTestData() {
+            webViewX.invoke('getTestData', {
+                success(res) {
+                    alert(JSON.stringify(res))
+                }
+            })
+        }
+        function error() {
+            webViewX.invoke('testError', {
+                id: 101,
+                fail(err) {
+                    alert(err)
+                }
+            })
+        }
+        function navigateToMiniProgram() {
+            webViewX.invoke('navigateToMiniProgram', {
+                path: 'file:///android_asset/taoweiji.com/',
+                baseUrl: 'http://taoweiji.com/',
+                url: 'http://taoweiji.com/index.html?userId=1',
+
+                fail(err) {
+                    alert(err)
+                }
+            })
+        }
+        function navigateTo() {
+            webViewX.invoke('navigateTo', {
+                url: 'http://taoweiji.com/index.html?userId=1',
+                fail(err) {
+                    alert(err)
+                }
+            })
+        }
+        function showToast() {
+            webViewX.invoke('showToast', {
+                title: '这里是标题',
+                duration: 3000
+            })
+        }
+        function showModal1() {
+            webViewX.invoke('showModal', {
+                title: '这里是标题',
+                content: "这里是内容"
+            })
+        }
+        function showModal2() {
+            webViewX.invoke('showModal', {
+                title: '这里是标题',
+                content: "这里是内容",
+                showCancel: true,
+                cancelText: '否',
+                confirmText: '是',
+                confirmColor: '#576B95',
+                cancelColor: '#000000',
+                success(data) {
+                    alert('confirm: ' + data['confirm'] + ',cancel: ' + data['cancel'])
+                },
+            })
+        }
+        function showModal3() {
+            webViewX.invoke('showModal', {
+                content: "这里是内容"
+            })
+        }
+        function setClipboardData() {
+            webViewX.invoke('setClipboardData', {
+                data: "这里是拷贝的内容"
+            })
+        }
+        function getClipboardData() {
+            webViewX.invoke('getClipboardData', {
+                success(res) {
+                    alert(res['data'])
+                }
+            })
+        }
+        function makePhoneCall() {
+            webViewX.invoke('makePhoneCall', {
+                phoneNumber: '12345'
+            })
+        }
+        function getSystemInfo() {
+            webViewX.invoke('getSystemInfo', {
+                success(res) {
+                    alert(JSON.stringify(res))
+                }
+            })
+        }
+        function getLocation() {
+            webViewX.invoke('getLocation', {
+                success(res) {
+                    alert(JSON.stringify(res))
+                },
+                fail(e) {
+                    alert(e);
+                }
+            })
+        }
+        function openLocation1() {
+            webViewX.invoke('openLocation', {
+                type: 'wgs84',
+                latitude: 23.114107242362,
+                longitude: 113.31896506689
+            })
+        }
+        function openLocation2() {
+            webViewX.invoke('openLocation', {
+                type: 'gcj02',
+                latitude: 23.11150725015,
+                longitude: 113.3243863827
+            })
+        }
+        function getNetworkType() {
+            webViewX.invoke('getNetworkType', {
+                success(res) {
+                    alert(res['networkType'])
+                },
+                fail(e) {
+                    alert(e)
+                }
+            })
+        }
+    </script>
+
+
+    <div style="margin-top: 20px;margin-bottom: 20px;">
+        <button onclick="finish()">关闭页面</button>
+        <button onclick="getTestData()">getTestData</button>
+        <button onclick="getLoginInfo()">获取登录信息</button>
+        <button onclick="error()">测试错误</button>
+    </div>
+    以下是内置的API
+    <div style="margin-top: 20px;">
+        <button onclick="showToast()">showToast</button>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button onclick="showModal1()">显示对话框1</button>
+        <button onclick="showModal2()">显示对话框2</button>
+        <button onclick="showModal3()">显示对话框3</button>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button>设置存储</button>
+        <button>获取存储</button>
+        <button>删除存储</button>
+        <button>清理存储</button>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button onclick="setClipboardData()">复制到粘贴板</button>
+        <button onclick="getClipboardData()">获取粘贴板内容</button>
+    </div>
+    <div style="margin-top: 20px;">
+        <button onclick="makePhoneCall()">打电话</utton>
+    </div>
+    <div style="margin-top: 20px;">
+        <button onclick="getSystemInfo()">获取设备信息</utton>
+    </div>
+    <div style="margin-top: 20px;">
+        <button onclick="getLocation()">获取定位信息</button>
+        <button onclick="openLocation1()">跳转到地图APP</button>
+        <button onclick="openLocation2()">跳转到地图APP</button>
+    </div>
+    <div style="margin-top: 20px;">
+        <button onclick="getNetworkType()">获取网络状态</utton>
+    </div>
+
+</body>
+
+</html>

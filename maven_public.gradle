@@ -1,0 +1,85 @@
+group = GROUP_ID
+version = VERSION_NAME
+
+Properties properties = new Properties()
+InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+properties.load(inputStream)
+
+def OSSRH_USERNAME = properties.getProperty('OSSRH_USERNAME')
+def OSSRH_PASSWORD = properties.getProperty('OSSRH_PASSWORD')
+def POM_DEVELOPER_ID = properties.getProperty('POM_DEVELOPER_ID')
+def POM_DEVELOPER_NAME = properties.getProperty('POM_DEVELOPER_NAME')
+def POM_DEVELOPER_EMAIL = properties.getProperty('POM_DEVELOPER_EMAIL')
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+signing {
+    sign configurations.archives
+}
+boolean isAndroid = project.getPlugins().hasPlugin('com.android.library')
+if (isAndroid) {
+    task androidJavadocs(type: Javadoc) {
+        source = android.sourceSets.main.java.source
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        excludes = ['**/*.kt']
+    }
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+        classifier = 'javadoc'
+        from androidJavadocs.destinationDir
+    }
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.source
+    }
+} else {
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { deployment -> signing.signPom(deployment) }
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: OSSRH_USERNAME, password: OSSRH_PASSWORD)
+            }
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: OSSRH_USERNAME, password: OSSRH_PASSWORD)
+            }
+            pom.project {
+                name POM_NAME
+                packaging isAndroid ? 'jar' : 'aar'
+                description POM_DESCRIPTION
+                url POM_URL
+                scm {
+                    connection POM_SCM_CONNECTION
+                    developerConnection POM_SCM_DEV_CONNECTION
+                    url POM_SCM_URL
+                }
+                licenses {
+                    license {
+                        name POM_LICENCE_NAME
+                        url POM_LICENCE_URL
+                    }
+                }
+                developers {
+                    developer {
+                        id POM_DEVELOPER_ID
+                        name POM_DEVELOPER_NAME
+                        email POM_DEVELOPER_EMAIL
+                    }
+                }
+            }
+        }
+    }
+}
