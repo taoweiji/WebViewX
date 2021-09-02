@@ -1,16 +1,6 @@
 group = GROUP_ID
 version = VERSION_NAME
 
-Properties properties = new Properties()
-InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
-properties.load(inputStream)
-
-def OSSRH_USERNAME = properties.getProperty('OSSRH_USERNAME')
-def OSSRH_PASSWORD = properties.getProperty('OSSRH_PASSWORD')
-def POM_DEVELOPER_ID = properties.getProperty('POM_DEVELOPER_ID')
-def POM_DEVELOPER_NAME = properties.getProperty('POM_DEVELOPER_NAME')
-def POM_DEVELOPER_EMAIL = properties.getProperty('POM_DEVELOPER_EMAIL')
-
 apply plugin: 'maven'
 apply plugin: 'signing'
 signing {

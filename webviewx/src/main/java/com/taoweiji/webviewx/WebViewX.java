@@ -74,12 +74,23 @@ public class WebViewX extends WebView {
         webViewXBridge.setLoadOptions(options);
     }
 
+    public void addLoadOption(String key, Object value) {
+        webViewXBridge.addLoadOption(key, value);
+    }
+
     public WebViewXBridge getWebViewXBridge() {
         return webViewXBridge;
     }
 
-    public void sendEvent(String name, JSONObject data) {
-        webViewXBridge.sendEvent(name, data);
+    public void postEvent(String name, JSONObject data) {
+        webViewXBridge.postEvent(name, data);
+    }
+
+    /**
+     * 粘性事件，在postStickyEvent之后订阅也可以收到消息
+     */
+     void postStickyEvent(String name, JSONObject data) {
+        webViewXBridge.postStickyEvent(name, data);
     }
 
     public void addInterceptor(WebViewXBridge.Interceptor bridgeHandler) {

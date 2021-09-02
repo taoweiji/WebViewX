@@ -79,7 +79,7 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == 1) {
-            webView.sendEvent("event", new JSONObject(Collections.singletonMap("data", "hello world")));
+            webView.postEvent("event", new JSONObject(Collections.singletonMap("data", "hello world")));
         }
         return super.onOptionsItemSelected(item);
     }

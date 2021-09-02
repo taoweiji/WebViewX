@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="example/src/main/res/layout/activity_offline_web_view.xml" value="0.20643363728470113" />
         <entry key="example/src/main/res/layout/activity_web_view_xbridge.xml" value="0.17119565217391305" />
       </map>
     </option>

@@ -77,12 +77,12 @@ public class WebViewXBridge {
         return true;
     }
 
-    public void sendEvent(String name, JSONObject data) {
+    public void postEvent(String name, JSONObject data) {
         if (webView == null) {
             new Exception("webView == null").printStackTrace();
             return;
         }
-        webView.loadUrl("javascript:webViewX.sendEvent('" + name + "'," + data + ")");
+        webView.loadUrl("javascript:webViewX.postEvent('" + name + "'," + data + ")");
     }
 
     public void onResume() {
@@ -95,6 +95,17 @@ public class WebViewXBridge {
 
     public void setLoadOptions(JSONObject options) {
         getLifecycle().setLoadOptions(options);
+    }
+
+    public void addLoadOption(String key, Object value) {
+        getLifecycle().addLoadOption(key, value);
+    }
+
+    /**
+     * 粘性事件，在postStickyEvent之后订阅也可以收到消息
+     */
+     void postStickyEvent(String name, JSONObject data) {
+
     }
 
     public interface Interceptor {

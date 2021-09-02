@@ -6,10 +6,11 @@ import android.webkit.WebView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.taoweiji.webviewx.WebViewX;
 import com.taoweiji.webviewx.WebViewXClient;
 
 public class OfflineWebViewActivity extends AppCompatActivity {
-    private WebView webView;
+    private WebViewX webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +20,10 @@ public class OfflineWebViewActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.setWebChromeClient(new WebChromeClient());
-
-        WebViewXClient webViewXClient = new WebViewXClient(null);
-        webViewXClient.addLocalResource("http://taoweiji.com/", "file:///android_asset/taoweiji.com/");
-        webViewXClient.addLocalResource("http://2048.com/", "file:///android_asset/2048/");
-        webViewXClient.addLocalResource("http://flappy-bird.com/", "file:///android_asset/flappy-bird/");
-        webViewXClient.addLocalResource("http://tetris.com/", "file:///android_asset/tetris/");
-        webView.setWebViewClient(webViewXClient);
+        webView.addLocalResource("http://taoweiji.com/", "file:///android_asset/taoweiji.com/");
+        webView.addLocalResource("http://2048.com/", "file:///android_asset/2048/");
+        webView.addLocalResource("http://flappy-bird.com/", "file:///android_asset/flappy-bird/");
+        webView.addLocalResource("http://tetris.com/", "file:///android_asset/tetris/");
         String url = getIntent().getStringExtra("url");
         webView.loadUrl(url);
     }

@@ -2,6 +2,7 @@ package com.taoweiji.webviewx;
 
 import android.webkit.WebView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -27,6 +28,17 @@ class PageLifecycle {
         }
         this.loadOptions = options;
         dispatchOnLoad();
+    }
+
+    public void addLoadOption(String key, Object value) {
+        if (this.loadOptions == null) {
+            this.loadOptions = new JSONObject();
+        }
+        try {
+            this.loadOptions.put(key, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     void onShow() {
@@ -67,7 +79,7 @@ class PageLifecycle {
             return;
         }
         notifyOnLoad = true;
-        webViewXBridge.sendEvent("PageLifecycle.onLoad", loadOptions);
+        webViewXBridge.postEvent("PageLifecycle.onLoad", loadOptions);
     }
 
     private void dispatchOnUnLoad() {
@@ -75,7 +87,7 @@ class PageLifecycle {
             return;
         }
         notifyOnUnLoad = true;
-        webViewXBridge.sendEvent("PageLifecycle.onUnLoad", null);
+        webViewXBridge.postEvent("PageLifecycle.onUnLoad", null);
     }
 
     private void dispatchOnShow() {
@@ -83,7 +95,7 @@ class PageLifecycle {
             return;
         }
         notifyOnShow = true;
-        webViewXBridge.sendEvent("PageLifecycle.onShow", null);
+        webViewXBridge.postEvent("PageLifecycle.onShow", null);
     }
 
     private void dispatchOnHide() {
@@ -91,6 +103,6 @@ class PageLifecycle {
             return;
         }
         notifyOnHide = true;
-        webViewXBridge.sendEvent("PageLifecycle.onHide", null);
+        webViewXBridge.postEvent("PageLifecycle.onHide", null);
     }
 }

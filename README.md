@@ -155,7 +155,7 @@ webViewX.setLoadOptions(json);
 JSONObject json = new JSONObject();
 json.put("id", id);
 json.put("name", "Wiki"); 
-webViewX.sendEvent("loginChanged",json);
+webViewX.postEvent("loginChanged",json);
 ```
 
 
@@ -190,7 +190,7 @@ webViewX.sendEvent("loginChanged",json);
                     registerEvent(name, data) { },
                     invoke(name, data) { },
                     invokeSync(name, data) { },
-                    sendEvent(name, data){ }
+                    postEvent(name, data){ }
                 };
             }
             return eval(webViewXBridge.getSource());

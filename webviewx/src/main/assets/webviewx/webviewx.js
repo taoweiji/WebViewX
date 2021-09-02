@@ -87,7 +87,7 @@ if (window.webViewX == undefined) {
                     }
                 }
             },
-            sendEvent(name, data) {
+            postEvent(name, data) {
                 for (const iterator of this.registryEvents) {
                     if (iterator[0] == name) {
                         iterator[1](data)
