@@ -94,6 +94,10 @@ public class WebViewX extends WebView implements EventCenter.Register {
         webViewXBridge.postStickyEvent(name, data);
     }
 
+    public void removeStickyEvent(String name) {
+        webViewXBridge.removeStickyEvent(name);
+    }
+
     public void broadcastEvent(String name, JSONObject event) {
         EventCenter.getInstance().broadcastEvent(name, event);
     }
@@ -137,4 +141,5 @@ public class WebViewX extends WebView implements EventCenter.Register {
     public void loadUrl(@NonNull String url) {
         super.loadUrl(url);
     }
+
 }

@@ -58,12 +58,12 @@ if (window['webViewX'] == undefined) {
                 }
                 var result = webViewXBridge.invokeSync(apiName, JSON.stringify(caller))
                 try {
-                    if(result == null){
+                    if (result == null) {
                         return null;
                     }
                     return JSON.parse(result);
                 } catch (e) {
-                    throw new Error(apiName +": "+result);
+                    throw new Error(apiName + ": " + result);
                 }
             },
             createUUID() {
@@ -75,8 +75,8 @@ if (window['webViewX'] == undefined) {
             registerEvent(name, callback) {
                 this.registryEvents.push([name, callback])
                 if (self['webViewXBridge'] != undefined) {
-                    var event = this.invokeSync('getStickyEvent', {'name':name})
-                    if(event != null){
+                    var event = this.invokeSync('WebViewX.getStickyEvent', { 'name': name })
+                    if (event != null) {
                         callback(event)
                     }
                 }
@@ -86,7 +86,7 @@ if (window['webViewX'] == undefined) {
                 var eventNames = ['onLoad', 'onUnLoad', 'onShow', 'onHide'];
                 for (const name of eventNames) {
                     if (callback[name] != undefined) {
-                        this.registerEvent('PageLifecycle.' + name, function (data) {
+                        this.registerEvent('WebViewX.' + name, function (data) {
                             if (name == 'onLoad') {
                                 callback[name](data)
                             } else {
@@ -96,23 +96,58 @@ if (window['webViewX'] == undefined) {
                     }
                 }
             },
-            postEvent(name, data) {
+            receiveEvent(name, data) {
                 for (const iterator of this.registryEvents) {
                     if (iterator[0] == name) {
                         iterator[1](data)
                     }
                 }
             },
-            broadcastEvent(name, data) {
-
-//                for (const iterator of this.registryEvents) {
-//                    if (iterator[0] == name) {
-//                        iterator[1](data)
-//                    }
-//                }
+            postEvent(name, data) {
+                this.invokeSync('WebViewX.postEvent', {
+                    'name': name,
+                    'data': data
+                })
             },
-
+            postStickyEvent(name, data) {
+                this.invokeSync('WebViewX.postStickyEvent', {
+                    'name': name,
+                    'data': data
+                })
+            },
+            removeStickyEvent(name) {
+                this.invokeSync('WebViewX.removeStickyEvent', {
+                    'name': name
+                })
+            },
+            broadcastEvent(name, data) {
+                this.invokeSync('WebViewX.broadcastEvent', {
+                    'name': name,
+                    'data': data
+                })
+            },
         };
     }
 }
 window.webViewX;
+
+webViewX.registerPageEvent({
+    onLoad: function (options) {
+        // Do some initialize when page load.
+        console.log('onLoad ' + JSON.stringify(options));
+    },
+    onShow: function () {
+        // Do something when page show.
+        console.log('onShow');
+    },
+    onHide: function () {
+        // Do something when page hide.
+        console.log('onHide');
+    },
+    onUnload: function () {
+        // Do something when page close.
+        console.log('onUnload');
+    }
+})
+var res = webViewX.invokeSync('WebViewX.isShowed')
+console.log('isShowed', res.data);

@@ -1,7 +1,8 @@
 package com.taoweiji.webviewx;
 
 import android.annotation.SuppressLint;
-import android.webkit.JavascriptInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.webkit.WebView;
 
 import androidx.annotation.CallSuper;
@@ -56,27 +57,45 @@ public class WebViewXBridge {
 
     @CallSuper
     boolean invoke(ApiCaller caller) {
-        if (caller.getApiName().equals("getLoadOptions")) {
-            caller.success(getLifecycle().getLoadOptions());
-            return true;
+        switch (caller.getApiName()) {
+            case "WebViewX.getLoadOptions":
+                caller.success(getLifecycle().getLoadOptions());
+                return true;
+            case "WebViewX.getStickyEvent":
+                caller.success(stickyEvents.get(caller.getParams().optString("name")));
+                return true;
+            case "WebViewX.broadcastEvent":
+                String name = caller.getParams().optString("name");
+                JSONObject data = caller.getParams().optJSONObject("data");
+                EventCenter.getInstance().broadcastEvent(name, data);
+                caller.success();
+                return true;
+            case "WebViewX.postEvent":
+                String name1 = caller.getParams().optString("name");
+                JSONObject data1 = caller.getParams().optJSONObject("data");
+                postEvent(name1, data1);
+                caller.success();
+                return true;
+            case "WebViewX.postStickyEvent":
+                String name2 = caller.getParams().optString("name");
+                JSONObject data2 = caller.getParams().optJSONObject("data");
+                postStickyEvent(name2, data2);
+                caller.success();
+                return true;
+            case "WebViewX.removeStickyEvent":
+                String name3 = caller.getParams().optString("name");
+                removeStickyEvent(name3);
+                caller.success();
+                return true;
+            case "WebViewX.isShowed":
+                caller.successData(getLifecycle().isShowed());
+                return true;
         }
-        if (caller.getApiName().equals("getStickyEvent")) {
-            caller.success(stickyEvents.get(caller.getParams().optString("name")));
-            return true;
-        }
-        //        if (caller.getApiName().equals("getPageState")){
-//            caller.onSuccess(getLifecycle().getLoadOptions());
-//        }
-
         for (Interceptor interceptor : interceptors) {
             if (interceptor.invoke(caller)) {
                 return true;
             }
         }
-
-
-
-
         return false;
     }
 
@@ -101,7 +120,7 @@ public class WebViewXBridge {
             new Exception("webView == null").printStackTrace();
             return;
         }
-        webView.loadUrl("javascript:if (window['webViewX'] != undefined) webViewX.postEvent('" + name + "'," + data + ")");
+        new Handler(Looper.getMainLooper()).post(() -> webView.loadUrl("javascript:if (window['webViewX'] != undefined) webViewX.receiveEvent('" + name + "'," + data + ")"));
     }
 
     public void onResume() {
@@ -128,6 +147,13 @@ public class WebViewXBridge {
     public void postStickyEvent(String name, JSONObject data) {
         stickyEvents.put(name, data);
         postEvent(name, data);
+    }
+
+    /**
+     * 移除粘性事件
+     */
+    public void removeStickyEvent(String name) {
+        stickyEvents.remove(name);
     }
 
     public interface Interceptor {

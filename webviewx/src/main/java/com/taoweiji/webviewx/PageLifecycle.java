@@ -1,7 +1,5 @@
 package com.taoweiji.webviewx;
 
-import android.webkit.WebView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -89,7 +87,7 @@ class PageLifecycle {
             return;
         }
         notifyOnLoad = true;
-        webViewXBridge.postStickyEvent("PageLifecycle.onLoad", loadOptions);
+        webViewXBridge.postStickyEvent("WebViewX.onLoad", loadOptions);
     }
 
     private void dispatchOnUnLoad() {
@@ -97,7 +95,7 @@ class PageLifecycle {
             return;
         }
         notifyOnUnLoad = true;
-        webViewXBridge.postEvent("PageLifecycle.onUnLoad", null);
+        webViewXBridge.postEvent("WebViewX.onUnLoad", null);
     }
 
     private void dispatchOnShow() {
@@ -105,7 +103,7 @@ class PageLifecycle {
             return;
         }
         notifyOnShow = true;
-        webViewXBridge.postEvent("PageLifecycle.onShow", null);
+        webViewXBridge.postEvent("WebViewX.onShow", null);
     }
 
     private void dispatchOnHide() {
@@ -113,10 +111,14 @@ class PageLifecycle {
             return;
         }
         notifyOnHide = true;
-        webViewXBridge.postEvent("PageLifecycle.onHide", null);
+        webViewXBridge.postEvent("WebViewX.onHide", null);
     }
 
     public JSONObject getLoadOptions() {
         return loadOptions;
+    }
+
+    public boolean isShowed() {
+        return showed;
     }
 }

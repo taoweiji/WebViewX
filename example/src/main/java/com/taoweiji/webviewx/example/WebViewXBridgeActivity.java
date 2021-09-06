@@ -5,6 +5,7 @@ import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import android.Manifest;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
@@ -47,11 +48,15 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
                         caller.fail(new Exception("Unknown"));
                         return true;
                 }
+                caller.putExtra("webView", webView);
                 return false;
             }
 
             @Override
             public boolean interrupt(@Nullable String url, @NonNull String apiName) {
+                if (url == null || url.contains("abc.com")) {
+                    return false;
+                }
                 return false;
             }
         });

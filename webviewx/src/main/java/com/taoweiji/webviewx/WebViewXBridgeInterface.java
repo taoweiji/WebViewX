@@ -134,7 +134,6 @@ class WebViewXBridgeInterface {
 
     @JavascriptInterface
     public final String invokeSync(String apiName, final String paramsStr) {
-        Log.e("invokeSync", apiName + ":" + paramsStr);
         final Object[] result = new Object[1];
         result[0] = "{}";
         ApiCaller caller = new ApiCaller(getWebView().getContext(), true, webViewXBridge.currentUrl, apiName) {

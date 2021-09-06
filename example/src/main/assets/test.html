@@ -1,7 +1,9 @@
 <html>
+
 <head>
     <meta charset="UTF-8">
 </head>
+
 <body>
     <script src="webviewx/webviewx.js"></script>
     <script>
@@ -23,13 +25,13 @@
                 console.log('onUnload');
             }
         })
-        webViewX.registerEvent('event',function (data){
+        webViewX.registerEvent('event', function (data) {
             alert(JSON.stringify(data));
         })
-        webViewX.registerEvent('testStickyEvent',function (data){
-            console.log("testStickyEvent:"+JSON.stringify(data));
+        webViewX.postEvent('event', { 'data': "Hello" })
+        webViewX.registerEvent('testStickyEvent', function (data) {
+            console.log("testStickyEvent:" + JSON.stringify(data));
         })
-
         function getLoginInfo() {
             webViewX.invoke('getLoginInfo', {
                 success(res) {
