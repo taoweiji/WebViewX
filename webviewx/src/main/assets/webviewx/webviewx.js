@@ -1,4 +1,4 @@
-if (window.webViewX == undefined) {
+if (window['webViewX'] == undefined) {
     var version = 1;
     if (self['webViewXBridge'] != undefined && version < webViewXBridge.getJSVersion()) {
         console.error('当前 WebViewX 的版本过低，已经加载客户端sdk最新代码');
@@ -58,9 +58,12 @@ if (window.webViewX == undefined) {
                 }
                 var result = webViewXBridge.invokeSync(apiName, JSON.stringify(caller))
                 try {
+                    if(result == null){
+                        return null;
+                    }
                     return JSON.parse(result);
                 } catch (e) {
-                    throw new Error(result);
+                    throw new Error(apiName +": "+result);
                 }
             },
             createUUID() {
@@ -71,6 +74,12 @@ if (window.webViewX == undefined) {
             },
             registerEvent(name, callback) {
                 this.registryEvents.push([name, callback])
+                if (self['webViewXBridge'] != undefined) {
+                    var event = this.invokeSync('getStickyEvent', {'name':name})
+                    if(event != null){
+                        callback(event)
+                    }
+                }
             },
             // 注册页面的生命周期，解决页面刷新，预渲染等
             registerPageEvent(callback) {
@@ -93,7 +102,16 @@ if (window.webViewX == undefined) {
                         iterator[1](data)
                     }
                 }
-            }
+            },
+            broadcastEvent(name, data) {
+
+//                for (const iterator of this.registryEvents) {
+//                    if (iterator[0] == name) {
+//                        iterator[1](data)
+//                    }
+//                }
+            },
+
         };
     }
 }

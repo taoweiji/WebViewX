@@ -16,6 +16,135 @@ WebViewX：WebView 能力增强框架，提供易用的异步API，简化原生�
 implementation 'io.github.taoweiji.webviewx:webviewx:+'
 ```
 
+## 基础准备
+
+### Java侧
+
+### JS侧
+
+
+## 网页离线运行
+通过离线运行，可以加快“前后端分离模式”和“静态网页”加载速度，提升用户体验，支持assets路径，也支持文件路径。
+```java
+webViewX.addLocalResource("https://2048.com", "file:///android_asset/2048");
+String path = new File(this.getFilesDir(),"1024").getAbsolutePath();
+webViewX.addLocalResource("https://1024.com", path);
+webViewX.loadUrl("https://2048.com");
+```
+
+
+## 页面事件
+### Java侧
+#### 设置LoadOptions
+这个方法用于设置页面事件的onLoad(data)函数，可以实现告知网页当前页面的一些访问信息
+
+```java
+JSONObject json = new JSONObject();
+json.put("from", "home");
+webViewX.setLoadOptions(json);
+```
+
+### JS侧
+#### 注册页面事件
+
+
+## 事件、粘性事件
+### Java侧
+#### 发送普通事件
+H5端必须已经注册才能收到事件，如果是在H5加载中发送事件，可能会导致无法收到事件
+```java
+JSONObject json = new JSONObject();
+json.put("id", id);
+json.put("name", "Wiki"); 
+webViewX.postEvent("loginChanged",json);
+```
+#### 发送粘性事件
+粘性事件，如果在H5已经注册，那么发送时就可以收到事件，如果H5还在加载中，当H5注册事件时会收到事件，页面重新注册也会收到。
+```java
+JSONObject json = new JSONObject();
+json.put("id", id);
+json.put("name", "Wiki"); 
+webViewX.postEvent("loginChanged",json);
+```
+#### 取消粘性事件
+由于粘性事件可以重复接收，如果不希望事件继续传播，可以在JS端中断事件的发送。
+```Javascript
+// 取消eventName所有的事件
+webViewX.removeStickyEvent('eventName');
+// 取消单一事件对象
+webViewX.removeStickyEvent(event);
+```
+### JS侧
+#### 注册事件
+
+#### 取消粘性事件
+
+#### 发送普通事件
+
+#### 发送粘性事件
+
+## 事件中心：跨WebView发送事件
+默认情况下，事件只能在当前WebView收发，无法发送到其它的WebView，如果要适配类似微信小程序架构，每个页面都使用独立的WebView加载，如果要把事件发送到其它的WebView，那么就要事件注册中心。
+### 广播事件
+所有在事件中心注册的WebView都可以收到事件。
+### Java侧
+```java
+WebViewX.broadcastEvent("event_name",event);
+```
+
+### JS侧
+```java
+webViewX.broadcastEvent('event_name',event);
+```
+
+### 定向发送事件
+可以通过页面名称/ID从事件中心获取WebView接收者对象，从而实现定向发送。
+
+```java
+WebViewX.getEventCenter().getEventReceiver("").postEvent("event_name",event);
+```
+
+### JS侧
+```java
+webViewX.getEventReceiver('name').postEvent('event_name',event);
+```
+
+
+
+
+## 原生API
+### Java侧
+#### 全局注册API
+
+#### 局部拦截API
+##### 增加参数
+##### 中断请求
+#### 局部注册API
+
+### JS侧
+#### 调用异步API
+#### 调用同步API
+
+### 内置API
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### 创建 WebViewX
@@ -57,13 +186,6 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
 
 ### 注册离线资源
 
-通过离线运行，可以加快“前后端分离模式”和“静态网页”加载速度，提升用户体验，支持assets路径，也支持文件路径。
-```java
-webViewX.addLocalResource("https://2048.com", "file:///android_asset/2048");
-String path = new File(this.getFilesDir(),"1024").getAbsolutePath();
-webViewX.addLocalResource("https://1024.com", path);
-webViewX.loadUrl("https://2048.com");
-```
 
 
 
@@ -139,42 +261,17 @@ webViewX.addInterceptor(new WebViewXBridge.Interceptor() {
 
 ##### setLoadOptions
 
-这个方法用于设置页面事件的onLoad(data)函数，可以实现告知网页当前页面的一些访问信息
-
-```java
-JSONObject json = new JSONObject();
-json.put("from", "home");
-webViewX.setLoadOptions(json);
-```
 
 
 
 #### 发送普通事件
-H5端必须已经注册才能收到事件，如果是在H5加载中发送事件，可能会导致无法收到事件
-```java
-JSONObject json = new JSONObject();
-json.put("id", id);
-json.put("name", "Wiki"); 
-webViewX.postEvent("loginChanged",json);
-```
+
 
 #### 发送粘性事件
-粘性事件，如果在H5已经注册，那么发送时就可以收到事件，如果H5还在加载中，当H5注册事件时会收到事件，页面重新注册也会收到。
-```java
-JSONObject json = new JSONObject();
-json.put("id", id);
-json.put("name", "Wiki"); 
-webViewX.postEvent("loginChanged",json);
-```
+
 
 #### 取消粘性事件
-由于粘性事件可以重复接收，如果不喜欢事件继续传播，可以在JS端中断事件的发送。
-```Javascript
-// 取消eventName所有的事件
-webViewX.removeStickyEvent('eventName');
-// 取消单一事件对象
-webViewX.removeStickyEvent(event);
-```
+
 ## H5则使用WebViewX
 
 使用 WebViewX框架需要在H5中引入 webviewx.js 文件，提供2种引入方式。
@@ -296,7 +393,7 @@ webViewX.invoke('getUser',{
         }
         function getTestData(){
           	// 同步请求接口
-          	var data = webViewX.invokeSync('getTestData')
+          	var res = webViewX.invokeSync('getTestData')
           	alert(res.data)
         }
     </script>

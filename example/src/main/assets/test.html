@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <script src="webviewx.js"></script>
+    <script src="webviewx/webviewx.js"></script>
     <script>
         webViewX.registerPageEvent({
             onLoad: function (options) {
@@ -26,6 +26,10 @@
         webViewX.registerEvent('event',function (data){
             alert(JSON.stringify(data));
         })
+        webViewX.registerEvent('testStickyEvent',function (data){
+            console.log("testStickyEvent:"+JSON.stringify(data));
+        })
+
         function getLoginInfo() {
             webViewX.invoke('getLoginInfo', {
                 success(res) {

@@ -3,7 +3,9 @@ package com.taoweiji.webviewx;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,9 +13,10 @@ import androidx.annotation.RequiresApi;
 
 import org.json.JSONObject;
 
-public class WebViewX extends WebView {
+public class WebViewX extends WebView implements EventCenter.Register {
     private WebViewXBridge webViewXBridge;
     private WebViewXClient webViewXClient;
+    private String eventRegisterId;
 
     public WebViewX(@NonNull Context context) {
         super(context);
@@ -46,6 +49,7 @@ public class WebViewX extends WebView {
         webViewXBridge = new WebViewXBridge(this);
         webViewXClient = new WebViewXClient(webViewXBridge);
         setWebViewClient(webViewXClient);
+        EventCenter.getInstance().register(this);
     }
 
     @Override
@@ -63,6 +67,7 @@ public class WebViewX extends WebView {
     @Override
     public void destroy() {
         webViewXBridge.destroy();
+        EventCenter.getInstance().unregister(this);
         super.destroy();
     }
 
@@ -74,12 +79,8 @@ public class WebViewX extends WebView {
         webViewXBridge.setLoadOptions(options);
     }
 
-    public void addLoadOption(String key, Object value) {
-        webViewXBridge.addLoadOption(key, value);
-    }
-
-    public WebViewXBridge getWebViewXBridge() {
-        return webViewXBridge;
+    public void setLoadOption(String key, Object value) {
+        webViewXBridge.setLoadOption(key, value);
     }
 
     public void postEvent(String name, JSONObject data) {
@@ -89,11 +90,51 @@ public class WebViewX extends WebView {
     /**
      * 粘性事件，在postStickyEvent之后订阅也可以收到消息
      */
-     void postStickyEvent(String name, JSONObject data) {
+    public void postStickyEvent(String name, JSONObject data) {
         webViewXBridge.postStickyEvent(name, data);
+    }
+
+    public void broadcastEvent(String name, JSONObject event) {
+        EventCenter.getInstance().broadcastEvent(name, event);
     }
 
     public void addInterceptor(WebViewXBridge.Interceptor bridgeHandler) {
         webViewXBridge.addInterceptor(bridgeHandler);
+    }
+
+    public void setWebViewClient(WebViewXClient client) {
+        super.setWebViewClient(client);
+    }
+
+    /**
+     * 请使用 {@link #setWebViewClient(WebViewXClient)}
+     */
+    @Deprecated
+    @Override
+    public void setWebViewClient(@NonNull WebViewClient client) {
+        super.setWebViewClient(client);
+    }
+
+
+    @Override
+    public WebViewXBridge getWebViewXBridge() {
+        return webViewXBridge;
+    }
+
+    public void setEventRegisterId(String eventRegisterId) {
+        this.eventRegisterId = eventRegisterId;
+    }
+
+    @Override
+    public String getEventRegisterId() {
+        if (eventRegisterId != null) {
+            return eventRegisterId;
+        }
+        return String.valueOf(this.hashCode());
+    }
+
+    @Override
+    public void loadUrl(@NonNull String url) {
+        super.loadUrl(url);
     }
 }

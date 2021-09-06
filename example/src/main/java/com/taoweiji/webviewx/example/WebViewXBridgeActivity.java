@@ -68,6 +68,7 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
         }
 //        webView.addLocalResource("https://2048.com", "file:///android_asset/2048");
 //        webView.loadUrl("https://2048.com");
+        webView.postStickyEvent("testStickyEvent", new JSONObject(Collections.singletonMap("data", "hello world")));
     }
 
     @Override

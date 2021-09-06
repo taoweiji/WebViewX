@@ -1,6 +1,7 @@
 package com.taoweiji.webviewx;
 
 import android.annotation.SuppressLint;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import androidx.annotation.CallSuper;
@@ -10,7 +11,9 @@ import androidx.annotation.Nullable;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WebViewXBridge {
     WebView webView;
@@ -53,11 +56,27 @@ public class WebViewXBridge {
 
     @CallSuper
     boolean invoke(ApiCaller caller) {
+        if (caller.getApiName().equals("getLoadOptions")) {
+            caller.success(getLifecycle().getLoadOptions());
+            return true;
+        }
+        if (caller.getApiName().equals("getStickyEvent")) {
+            caller.success(stickyEvents.get(caller.getParams().optString("name")));
+            return true;
+        }
+        //        if (caller.getApiName().equals("getPageState")){
+//            caller.onSuccess(getLifecycle().getLoadOptions());
+//        }
+
         for (Interceptor interceptor : interceptors) {
             if (interceptor.invoke(caller)) {
                 return true;
             }
         }
+
+
+
+
         return false;
     }
 
@@ -82,7 +101,7 @@ public class WebViewXBridge {
             new Exception("webView == null").printStackTrace();
             return;
         }
-        webView.loadUrl("javascript:webViewX.postEvent('" + name + "'," + data + ")");
+        webView.loadUrl("javascript:if (window['webViewX'] != undefined) webViewX.postEvent('" + name + "'," + data + ")");
     }
 
     public void onResume() {
@@ -97,15 +116,18 @@ public class WebViewXBridge {
         getLifecycle().setLoadOptions(options);
     }
 
-    public void addLoadOption(String key, Object value) {
-        getLifecycle().addLoadOption(key, value);
+    public void setLoadOption(String key, Object value) {
+        getLifecycle().setLoadOption(key, value);
     }
+
+    Map<String, JSONObject> stickyEvents = new HashMap<>();
 
     /**
      * 粘性事件，在postStickyEvent之后订阅也可以收到消息
      */
-     void postStickyEvent(String name, JSONObject data) {
-
+    public void postStickyEvent(String name, JSONObject data) {
+        stickyEvents.put(name, data);
+        postEvent(name, data);
     }
 
     public interface Interceptor {

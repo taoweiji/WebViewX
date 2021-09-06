@@ -5,6 +5,8 @@ import android.webkit.WebView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 /**
  * 参考微信小程序，控制页面的生命周期
  */
@@ -23,14 +25,21 @@ class PageLifecycle {
     }
 
     void setLoadOptions(JSONObject options) {
-        if (options == null) {
-            options = new JSONObject();
+        if (this.loadOptions == null) {
+            this.loadOptions = new JSONObject();
         }
-        this.loadOptions = options;
-        dispatchOnLoad();
+        Iterator<String> it = options.keys();
+        try {
+            while (it.hasNext()) {
+                String key = it.next();
+                this.loadOptions.put(key, options.get(key));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void addLoadOption(String key, Object value) {
+    public void setLoadOption(String key, Object value) {
         if (this.loadOptions == null) {
             this.loadOptions = new JSONObject();
         }
@@ -65,6 +74,7 @@ class PageLifecycle {
         notifyOnLoad = false;
         notifyOnShow = false;
         notifyOnUnLoad = false;
+        // TODO dispatchOnLoad();
     }
 
     void onPageFinished(String url) {
@@ -79,7 +89,7 @@ class PageLifecycle {
             return;
         }
         notifyOnLoad = true;
-        webViewXBridge.postEvent("PageLifecycle.onLoad", loadOptions);
+        webViewXBridge.postStickyEvent("PageLifecycle.onLoad", loadOptions);
     }
 
     private void dispatchOnUnLoad() {
@@ -104,5 +114,9 @@ class PageLifecycle {
         }
         notifyOnHide = true;
         webViewXBridge.postEvent("PageLifecycle.onHide", null);
+    }
+
+    public JSONObject getLoadOptions() {
+        return loadOptions;
     }
 }

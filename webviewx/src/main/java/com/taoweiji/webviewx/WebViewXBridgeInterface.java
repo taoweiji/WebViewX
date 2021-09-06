@@ -2,6 +2,7 @@ package com.taoweiji.webviewx;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
@@ -18,6 +19,7 @@ class WebViewXBridgeInterface {
         this.webViewXBridge = webViewXBridge;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     @JavascriptInterface
     public final boolean canIUse(String apiName) {
         if (!WebViewXApiManager.getInstance().canIUse(apiName)) {
@@ -99,20 +101,31 @@ class WebViewXBridgeInterface {
         };
         new Thread(() -> {
             try {
-                if (webViewXBridge.invoke(caller)) {
-                    return;
-                }
-                if (!canIUse(apiName)) {
-                    caller.fail(new Exception("不支持请求"));
-                    return;
-                }
                 try {
                     caller.setParams(new JSONObject(paramsStr));
                 } catch (JSONException e) {
                     caller.onFail(new Exception("参数异常", e));
                     return;
                 }
-                WebViewXApiManager.getInstance().invoke(apiName, caller, false);
+                // 检查权限
+                if (!webViewXBridge.hasCallPermission(webViewXBridge.currentUrl, apiName)) {
+                    caller.fail(new Exception("不支持请求"));
+                    return;
+                }
+                // 处理拦截器
+                if (webViewXBridge.invoke(caller)) {
+                    return;
+                }
+                // 判断是否存在API
+                if (!WebViewXApiManager.getInstance().canIUse(apiName)) {
+                    caller.fail(new Exception("不支持请求"));
+                    return;
+                }
+                try {
+                    WebViewXApiManager.getInstance().invoke(apiName, caller, false);
+                } catch (Exception e) {
+                    caller.fail(e);
+                }
             } catch (Exception e) {
                 caller.onFail(e);
             }
@@ -121,6 +134,7 @@ class WebViewXBridgeInterface {
 
     @JavascriptInterface
     public final String invokeSync(String apiName, final String paramsStr) {
+        Log.e("invokeSync", apiName + ":" + paramsStr);
         final Object[] result = new Object[1];
         result[0] = "{}";
         ApiCaller caller = new ApiCaller(getWebView().getContext(), true, webViewXBridge.currentUrl, apiName) {
@@ -132,17 +146,27 @@ class WebViewXBridgeInterface {
                 result[0] = error.getMessage();
             }
         };
-        if (webViewXBridge.invoke(caller)) {
-            return result[0].toString();
-        }
-        if (!canIUse(apiName)) {
-            caller.fail(new Exception("不支持请求"));
-            return result[0].toString();
-        }
         try {
             caller.setParams(new JSONObject(paramsStr));
         } catch (JSONException e) {
             caller.onFail(new Exception("参数异常", e));
+            return result[0].toString();
+        }
+        // 检查权限
+        if (!webViewXBridge.hasCallPermission(webViewXBridge.currentUrl, apiName)) {
+            caller.fail(new Exception("不支持请求"));
+            return result[0].toString();
+        }
+        // 处理拦截器
+        if (webViewXBridge.invoke(caller)) {
+            if (result[0] == null) {
+                return null;
+            }
+            return result[0].toString();
+        }
+        // 判断是否存在API
+        if (!WebViewXApiManager.getInstance().canIUse(apiName)) {
+            caller.fail(new Exception("不支持请求"));
             return result[0].toString();
         }
         try {

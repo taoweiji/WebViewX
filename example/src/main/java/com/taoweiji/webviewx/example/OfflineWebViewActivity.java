@@ -2,11 +2,18 @@ package com.taoweiji.webviewx.example;
 
 import android.os.Bundle;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.taoweiji.webviewx.ApiCaller;
 import com.taoweiji.webviewx.WebViewX;
+import com.taoweiji.webviewx.WebViewXBridge;
 import com.taoweiji.webviewx.WebViewXClient;
 
 public class OfflineWebViewActivity extends AppCompatActivity {
@@ -26,6 +33,30 @@ public class OfflineWebViewActivity extends AppCompatActivity {
         webView.addLocalResource("http://tetris.com/", "file:///android_asset/tetris/");
         String url = getIntent().getStringExtra("url");
         webView.loadUrl(url);
+        webView.addInterceptor(new WebViewXBridge.Interceptor() {
+            @Override
+            public boolean invoke(ApiCaller caller) {
+                caller.putExtra("from", "OfflineWebViewActivity");
+                return false;
+            }
+
+            @Override
+            public boolean interrupt(@Nullable String url, @NonNull String apiName) {
+                return false;
+            }
+        });
+        webView.setLoadOption("load_from", "OfflineWebViewActivity");
+        webView.setWebViewClient(new WebViewXClient(webView.getWebViewXBridge()) {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                return super.shouldInterceptRequest(view, url);
+            }
+        });
     }
 
     @Override
