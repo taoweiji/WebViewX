@@ -6,7 +6,7 @@
 //import com.taoweiji.webviewx.Api;
 //import com.taoweiji.webviewx.ApiCaller;
 //
-//public class MakePhoneCallApi implements Api {
+//public class MakePhoneCallApi extends Api {
 //    @Override
 //    public String name() {
 //        return "makePhoneCall";

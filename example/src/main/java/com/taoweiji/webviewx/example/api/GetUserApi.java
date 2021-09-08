@@ -7,7 +7,7 @@ import com.taoweiji.webviewx.ApiCaller;
 
 import org.json.JSONObject;
 
-public class GetUserApi implements Api {
+public class GetUserApi extends Api {
     @Override
     public String name() {
         return "getUser";

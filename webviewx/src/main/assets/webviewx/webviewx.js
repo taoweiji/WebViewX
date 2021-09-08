@@ -127,27 +127,9 @@ if (window['webViewX'] == undefined) {
                 })
             },
         };
+        webViewX.registerEvent('WebViewX.invokeCallback', function (event) {
+            webViewX.invokeCallback(event['callerId'], event['method'], event['data'])
+        })
     }
 }
 window.webViewX;
-
-webViewX.registerPageEvent({
-    onLoad: function (options) {
-        // Do some initialize when page load.
-        console.log('onLoad ' + JSON.stringify(options));
-    },
-    onShow: function () {
-        // Do something when page show.
-        console.log('onShow');
-    },
-    onHide: function () {
-        // Do something when page hide.
-        console.log('onHide');
-    },
-    onUnload: function () {
-        // Do something when page close.
-        console.log('onUnload');
-    }
-})
-var res = webViewX.invokeSync('WebViewX.isShowed')
-console.log('isShowed', res.data);

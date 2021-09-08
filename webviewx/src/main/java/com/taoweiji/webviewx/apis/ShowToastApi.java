@@ -5,7 +5,7 @@ import android.widget.Toast;
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
-public class ShowToastApi implements Api {
+public class ShowToastApi extends Api {
     @Override
     public String name() {
         return "showToast";

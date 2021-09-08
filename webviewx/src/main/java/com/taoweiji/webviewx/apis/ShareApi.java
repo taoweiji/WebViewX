@@ -9,7 +9,7 @@ import com.taoweiji.webviewx.ApiCaller;
 
 import java.util.ArrayList;
 
-public class ShareApi implements Api {
+public class ShareApi extends Api {
 
     @Override
     public String name() {

@@ -12,7 +12,7 @@ import com.taoweiji.webviewx.ApiCaller;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ShowModalApi implements Api {
+public class ShowModalApi extends Api {
     @Override
     public String name() {
         return "showModal";

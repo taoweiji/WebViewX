@@ -35,13 +35,13 @@ public class OfflineWebViewActivity extends AppCompatActivity {
         webView.loadUrl(url);
         webView.addInterceptor(new WebViewXBridge.Interceptor() {
             @Override
-            public boolean invoke(ApiCaller caller) {
+            public boolean invoke(@NonNull ApiCaller caller) {
                 caller.putExtra("from", "OfflineWebViewActivity");
                 return false;
             }
 
             @Override
-            public boolean interrupt(@Nullable String url, @NonNull String apiName) {
+            public boolean interrupt(@NonNull ApiCaller caller, @Nullable String url) {
                 return false;
             }
         });

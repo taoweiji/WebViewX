@@ -64,24 +64,15 @@ public final class WebViewXApiManager {
         return (Api) this.apis.get(name);
     }
 
-    public final void invoke(String apiName, final ApiCaller caller, boolean isInvokeSync) {
+    public final void invoke(String apiName, final ApiCaller caller) {
         final Api api = instance.getService(apiName);
         if (api == null) {
             caller.fail(new Exception("没有找到服务"));
-        } else if (isInvokeSync && !api.allowInvokeSync()) {
-            caller.fail(new Exception("该接口不允许同步调用，请检查 allowInvokeSync 方法"));
         } else {
-            Runnable runnable = () -> {
-                try {
-                    api.invoke(caller);
-                } catch (Throwable var2) {
-                    caller.fail(var2);
-                }
-            };
-            if (isInvokeSync) {
-                runnable.run();
+            if (caller.isInvokeSync()) {
+                api.handleInvoke(caller);
             } else {
-                new Thread(runnable).start();
+                new Thread(() -> api.handleInvoke(caller)).start();
             }
         }
     }

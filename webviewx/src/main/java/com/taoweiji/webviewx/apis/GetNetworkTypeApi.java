@@ -11,7 +11,7 @@ import com.taoweiji.webviewx.ApiCaller;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public final class GetNetworkTypeApi implements Api {
+public final class GetNetworkTypeApi extends Api {
     public String name() {
         return "getNetworkType";
     }

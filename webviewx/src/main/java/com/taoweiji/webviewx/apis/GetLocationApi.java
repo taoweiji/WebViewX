@@ -15,7 +15,7 @@ import com.taoweiji.webviewx.ApiCaller;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GetLocationApi implements Api {
+public class GetLocationApi extends Api {
     private static final long MAX_EXPIRE_TIME = 5 * 60 * 1000;
 
     @Override

@@ -3,6 +3,7 @@ package com.taoweiji.webviewx.example;
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 
 import android.Manifest;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 import com.taoweiji.webviewx.WebViewX;
 import com.taoweiji.webviewx.WebViewXBridge;
@@ -35,7 +37,7 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
         webView.setWebChromeClient(new WebChromeClient());
         webView.addInterceptor(new WebViewXBridge.Interceptor() {
             @Override
-            public boolean invoke(ApiCaller caller) {
+            public boolean invoke(@NonNull ApiCaller caller) {
                 switch (caller.getApiName()) {
                     case "close":
                         finish();
@@ -45,7 +47,7 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
                         caller.successData("Hello World");
                         return true;
                     case "testError":
-                        caller.fail(new Exception("Unknown"));
+                        caller.fail(new Exception("testError Unknown"));
                         return true;
                 }
                 caller.putExtra("webView", webView);
@@ -53,7 +55,7 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean interrupt(@Nullable String url, @NonNull String apiName) {
+            public boolean interrupt(@NonNull ApiCaller caller, @Nullable String url) {
                 if (url == null || url.contains("abc.com")) {
                     return false;
                 }
@@ -71,9 +73,10 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
         }
-//        webView.addLocalResource("https://2048.com", "file:///android_asset/2048");
-//        webView.loadUrl("https://2048.com");
         webView.postStickyEvent("testStickyEvent", new JSONObject(Collections.singletonMap("data", "hello world")));
+        // 临时注册API
+        webView.registerApi(new FinishApi(this));
+
     }
 
     @Override
@@ -106,5 +109,34 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
     protected void onDestroy() {
         webView.destroy();
         super.onDestroy();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+    }
+
+    public static class FinishApi extends Api {
+        Activity activity;
+
+        public FinishApi(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public String name() {
+            return "finish";
+        }
+
+        @Override
+        public boolean allowInvokeSync() {
+            return true;
+        }
+
+        @Override
+        protected void invoke(@NonNull ApiCaller caller) throws Exception {
+            activity.finish();
+            caller.success();
+        }
     }
 }

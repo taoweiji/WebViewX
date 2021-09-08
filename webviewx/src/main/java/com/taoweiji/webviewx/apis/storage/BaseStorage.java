@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
-abstract class BaseStorage implements Api {
+abstract class BaseStorage extends Api {
 
     SharedPreferences getSharedPreferences(ApiCaller caller) {
         return caller.getContext().getSharedPreferences("webViewX", Context.MODE_PRIVATE);

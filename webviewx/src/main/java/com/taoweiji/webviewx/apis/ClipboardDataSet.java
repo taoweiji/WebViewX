@@ -7,7 +7,7 @@ import android.content.Context;
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
-public class ClipboardDataSet implements Api {
+public class ClipboardDataSet extends Api {
     @Override
     public String name() {
         return "setClipboardData";

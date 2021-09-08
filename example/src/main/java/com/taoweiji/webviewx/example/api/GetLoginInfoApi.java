@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-public class GetLoginInfoApi implements Api {
+public class GetLoginInfoApi extends Api {
     @Override
     public String name() {
         return "getLoginInfo";

@@ -15,7 +15,7 @@ public abstract class ApiCaller {
     private final Thread syncExecuteThread;
     private final String apiName;
     private JSONObject params;
-    private boolean complete;
+    boolean complete;
 
     public ApiCaller(Context context, boolean isInvokeSync, String url, String apiName) {
         this.apiName = apiName;
@@ -81,7 +81,7 @@ public abstract class ApiCaller {
     @Override
     protected void finalize() {
         if (!this.complete) {
-            Exception error = new Exception(apiName +": 没有正常执行 success() 或 fail()");
+            Exception error = new Exception(apiName + ": 没有正常执行 success() 或 fail()");
             error.printStackTrace();
             this.fail(error);
         }

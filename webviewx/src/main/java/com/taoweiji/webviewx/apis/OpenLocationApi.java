@@ -6,7 +6,7 @@ import android.net.Uri;
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
-public class OpenLocationApi implements Api {
+public class OpenLocationApi extends Api {
     @Override
     public String name() {
         return "openLocation";

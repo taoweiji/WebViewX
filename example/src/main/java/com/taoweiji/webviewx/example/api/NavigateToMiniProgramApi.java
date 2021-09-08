@@ -4,7 +4,7 @@ import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 import com.taoweiji.webviewx.example.program.CopyMiniProgram;
 
-public class NavigateToMiniProgramApi implements Api {
+public class NavigateToMiniProgramApi extends Api {
     @Override
     public String name() {
         return "navigateToMiniProgram";

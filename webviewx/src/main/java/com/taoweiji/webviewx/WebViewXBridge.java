@@ -3,12 +3,15 @@ package com.taoweiji.webviewx;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.WebView;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -17,10 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 public class WebViewXBridge {
+    static final String EVENT_INVOKE_CALLBACK = "WebViewX.invokeCallback";
+
     WebView webView;
     String currentUrl;
     private final PageLifecycle pageLifecycle;
     private final List<Interceptor> interceptors = new ArrayList<>();
+    final Map<String, Api> apis = new HashMap<>();
+    final WebViewXLocalResource localResource = new WebViewXLocalResource();
 
 
     @SuppressLint("AddJavascriptInterface")
@@ -36,7 +43,7 @@ public class WebViewXBridge {
     }
 
 
-    private PageLifecycle getLifecycle() {
+    PageLifecycle getLifecycle() {
         return pageLifecycle;
     }
 
@@ -55,8 +62,7 @@ public class WebViewXBridge {
         getLifecycle().onPageFinished(url);
     }
 
-    @CallSuper
-    boolean invoke(ApiCaller caller) {
+    boolean invokeInnerInterceptor(ApiCaller caller) {
         switch (caller.getApiName()) {
             case "WebViewX.getLoadOptions":
                 caller.success(getLifecycle().getLoadOptions());
@@ -91,24 +97,13 @@ public class WebViewXBridge {
                 caller.successData(getLifecycle().isShowed());
                 return true;
         }
-        for (Interceptor interceptor : interceptors) {
-            if (interceptor.invoke(caller)) {
-                return true;
-            }
-        }
+
         return false;
     }
 
-    /**
-     * 可以用于白名单拦截，仅让部分
-     *
-     * @param url     网页链接
-     * @param apiName 访问的函数
-     * @return 是否允许访问
-     */
-    boolean hasCallPermission(@Nullable String url, @NonNull String apiName) {
+    boolean hasCallPermission(ApiCaller caller) {
         for (Interceptor interceptor : interceptors) {
-            if (interceptor.interrupt(url, apiName)) {
+            if (interceptor.interrupt(caller, currentUrl)) {
                 return false;
             }
         }
@@ -117,10 +112,14 @@ public class WebViewXBridge {
 
     public void postEvent(String name, JSONObject data) {
         if (webView == null) {
-            new Exception("webView == null").printStackTrace();
+            Log.e("WebViewX", "WebView 已经被销毁");
             return;
         }
-        new Handler(Looper.getMainLooper()).post(() -> webView.loadUrl("javascript:if (window['webViewX'] != undefined) webViewX.receiveEvent('" + name + "'," + data + ")"));
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (webView != null) {
+                webView.loadUrl("javascript:if (window['webViewX'] == undefined) {console.error('postEvent " + name + " 失败，webViewX 未初始化完毕')} else {webViewX.receiveEvent('" + name + "'," + data + ")}");
+            }
+        });
     }
 
     public void onResume() {
@@ -156,9 +155,63 @@ public class WebViewXBridge {
         stickyEvents.remove(name);
     }
 
-    public interface Interceptor {
-        boolean invoke(ApiCaller caller);
+    public final void registerApi(Api... api) {
+        for (Api it : api) {
+            if (TextUtils.isEmpty(it.name())) {
+                (new Exception("服务名称异常 " + it.getClass().getName())).printStackTrace();
+            }
+            this.apis.put(it.name(), it);
+        }
+    }
 
-        boolean interrupt(@Nullable String url, @NonNull String apiName);
+    final boolean canIUse(String apiName) {
+        if (this.apis.containsKey(apiName)) {
+            return true;
+        }
+        return WebViewXApiManager.getInstance().canIUse(apiName);
+    }
+
+    final void invoke(final ApiCaller caller, String apiName, String paramsStr, boolean isInvokeSync) {
+        try {
+            try {
+                caller.setParams(new JSONObject(paramsStr));
+            } catch (JSONException e) {
+                throw new Exception("参数异常", e);
+            }
+            // 检查权限
+            if (!this.hasCallPermission(caller)) {
+                throw new Exception("不支持请求");
+            }
+            // 处理内部拦截器
+            if (this.invokeInnerInterceptor(caller)) {
+                return;
+            }
+            // 拦截器处理
+            for (Interceptor interceptor : interceptors) {
+                if (interceptor.invoke(caller)) {
+                    return;
+                }
+            }
+            // 判断是否存在API
+            if (!canIUse(apiName)) {
+                throw new Exception("不支持请求");
+            }
+            Api api = apis.get(apiName);
+            if (api == null) {
+                api = WebViewXApiManager.getInstance().getService(apiName);
+            }
+            if (api == null) {
+                throw new Exception("没有找到服务");
+            }
+            api.handleInvoke(caller);
+        } catch (Exception e) {
+            caller.fail(e);
+        }
+    }
+
+    public interface Interceptor {
+        boolean invoke(@NonNull ApiCaller caller);
+
+        boolean interrupt(@NonNull ApiCaller caller, @Nullable String url);
     }
 }

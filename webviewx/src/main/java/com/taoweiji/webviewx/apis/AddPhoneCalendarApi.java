@@ -3,7 +3,7 @@ package com.taoweiji.webviewx.apis;
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
-public class AddPhoneCalendarApi implements Api {
+public class AddPhoneCalendarApi extends Api {
     @Override
     public String name() {
         return "addPhoneCalendar";

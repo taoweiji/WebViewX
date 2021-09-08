@@ -70,7 +70,7 @@ webViewX.loadUrl("https://2048.com");
 #### 全局注册API
 
 ```java
-public class GetUserApi implements Api {
+public class GetUserApi extends Api {
     @Override
     public String name() {
         return "getUser";

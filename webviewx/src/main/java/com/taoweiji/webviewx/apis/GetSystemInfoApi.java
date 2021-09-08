@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
-public class GetSystemInfoApi implements Api {
+public class GetSystemInfoApi extends Api {
     @Override
     public String name() {
         return "getSystemInfo";

@@ -136,7 +136,7 @@ public class CopyMiniProgram extends AppCompatActivity {
                 }
 
                 @Override
-                public boolean interrupt(@Nullable String url, @NonNull String apiName) {
+                public boolean interrupt(@NonNull ApiCaller caller, @Nullable String url) {
                     return false;
                 }
             });

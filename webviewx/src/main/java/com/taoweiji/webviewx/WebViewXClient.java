@@ -9,11 +9,10 @@ import androidx.annotation.CallSuper;
 
 public class WebViewXClient extends WebViewClient {
     private final WebViewXBridge webViewXBridge;
-    private final WebViewXLocalResource localResource;
+
 
     public WebViewXClient(WebViewXBridge webViewXBridge) {
         this.webViewXBridge = webViewXBridge;
-        this.localResource = new WebViewXLocalResource();
     }
 
     @CallSuper
@@ -34,7 +33,7 @@ public class WebViewXClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-        WebResourceResponse response = localResource.shouldInterceptRequest(view, url);
+        WebResourceResponse response = webViewXBridge.localResource.shouldInterceptRequest(view, url);
         if (response != null) {
             return response;
         }
@@ -46,6 +45,6 @@ public class WebViewXClient extends WebViewClient {
      * @param baseFilePath 支持本地文件及assets文件路径，格式如下：/data/data/com.xx/files/2048 or file:///android_asset/2048
      */
     public void addLocalResource(String baseUrl, String baseFilePath) {
-        localResource.addLocalResource(baseUrl, baseFilePath);
+        webViewXBridge.localResource.addLocalResource(baseUrl, baseFilePath);
     }
 }

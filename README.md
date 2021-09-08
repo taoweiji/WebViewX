@@ -5,8 +5,8 @@
 WebViewX：WebView 能力增强框架，提供易用的异步API，简化原生为JS提供接口的开发成本；提供网站离线运行能力，大大提高前后端分离架构的访问体验；提供页面事件订阅，让H5可以感知 Activity 的生命周期，并提供通用的事件，实现原生发到事件到页面。
 
 - 提供网页离线运行，提升“前后端分离模式”和“静态网页”下的体验；
-- 提供页面事件监听，支持设置预置参数，让页面根据页面状态更新数据，打点等；
-- 支持普通事件、粘性事件；支持跨WebView发送事件，定向发送事件、实现多WebView架构；
+- 提供页面事件监听，并支持设置预置参数，让页面根据页面状态更新数据，打点等；
+- 支持普通事件、粘性事件；支持跨WebView发送事件、定向发送事件，实现多WebView架构；
 - 支持同步、异步调用API，支持全局注册API、局部注册API，支持API权限控制；
 - 提供多个常用 API。
 
@@ -269,7 +269,7 @@ alert(res.data)
 #### 全局注册API
 
 ```java
-public class GetUserApi implements Api {
+public class GetUserApi extends Api {
     public String name() { return "getUser";}
     public boolean allowInvokeSync() {return true;}
     public void invoke(@NonNull ApiCaller caller) throws Exception {
