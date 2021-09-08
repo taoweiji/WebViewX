@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.taoweiji.webviewx.ApiCaller;
 import com.taoweiji.webviewx.WebViewX;
 import com.taoweiji.webviewx.WebViewXBridge;
-import com.taoweiji.webviewx.WebViewXClient;
 
 public class OfflineWebViewActivity extends AppCompatActivity {
     private WebViewX webView;
@@ -46,17 +45,6 @@ public class OfflineWebViewActivity extends AppCompatActivity {
             }
         });
         webView.setLoadOption("load_from", "OfflineWebViewActivity");
-        webView.setWebViewClient(new WebViewXClient(webView.getWebViewXBridge()) {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
-
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                return super.shouldInterceptRequest(view, url);
-            }
-        });
     }
 
     @Override

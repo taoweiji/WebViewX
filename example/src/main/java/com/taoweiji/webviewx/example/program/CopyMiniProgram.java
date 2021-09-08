@@ -28,8 +28,8 @@ import com.taoweiji.navigation.NavOptions;
 import com.taoweiji.navigation.StatusBarHelper;
 import com.taoweiji.navigation.ViewUtils;
 import com.taoweiji.webviewx.ApiCaller;
+import com.taoweiji.webviewx.WebViewX;
 import com.taoweiji.webviewx.WebViewXBridge;
-import com.taoweiji.webviewx.WebViewXClient;
 import com.taoweiji.webviewx.example.R;
 
 public class CopyMiniProgram extends AppCompatActivity {
@@ -112,9 +112,7 @@ public class CopyMiniProgram extends AppCompatActivity {
     }
 
     public static class WebViewAbility extends Ability {
-
-        private WebViewXBridge webViewXBridge;
-        private WebView webView;
+        private WebViewX webView;
 
         @Override
         protected View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -123,14 +121,12 @@ public class CopyMiniProgram extends AppCompatActivity {
             String path = getArguments().getString("path");
             String baseUrl = getArguments().getString("baseUrl");
             String url = getArguments().getString("url");
-            this.webView = new WebView(getContext());
+            this.webView = new WebViewX(getContext());
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebChromeClient(new WebChromeClient());
-
-            this.webViewXBridge = new WebViewXBridge(webView);
-            this.webViewXBridge.addInterceptor(new WebViewXBridge.Interceptor() {
+            webView.addInterceptor(new WebViewXBridge.Interceptor() {
                 @Override
-                public boolean invoke(ApiCaller caller) {
+                public boolean invoke(@NonNull ApiCaller caller) {
                     caller.getExtras().put("ability", WebViewAbility.this);
                     return false;
                 }
@@ -140,17 +136,26 @@ public class CopyMiniProgram extends AppCompatActivity {
                     return false;
                 }
             });
-            WebViewXClient webViewXClient = new WebViewXClient(webViewXBridge);
-            webViewXClient.addLocalResource(baseUrl, path);
-            webView.setWebViewClient(webViewXClient);
+            webView.addLocalResource(baseUrl, path);
             webView.loadUrl(url);
             return webView;
         }
 
         @Override
+        protected void onPause() {
+            super.onPause();
+            webView.onPause();
+        }
+
+        @Override
+        protected void onResume() {
+            super.onResume();
+            webView.onResume();
+        }
+
+        @Override
         protected void onDestroy() {
             webView.destroy();
-            webViewXBridge.destroy();
             super.onDestroy();
         }
     }

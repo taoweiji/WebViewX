@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
@@ -19,7 +21,7 @@ public class ShowModalApi extends Api {
     }
 
     @Override
-    public void invoke(ApiCaller caller) throws Exception {
+    public void invoke(@NonNull ApiCaller caller) throws Exception {
         runOnUiThread(() -> {
             String title = caller.getParams().optString("title", "");
             String content = caller.getParams().optString("content", "");

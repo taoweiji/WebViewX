@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 public class WebViewX extends WebView implements EventCenter.Register {
     private WebViewXBridge webViewXBridge;
-    private WebViewXClient webViewXClient;
+    //    private WebViewXClient webViewXClient;
     private String eventRegisterId;
 
     public WebViewX(@NonNull Context context) {
@@ -46,8 +46,7 @@ public class WebViewX extends WebView implements EventCenter.Register {
     private void init() {
         getSettings().setJavaScriptEnabled(true);
         webViewXBridge = new WebViewXBridge(this);
-        webViewXClient = new WebViewXClient(webViewXBridge);
-        setWebViewClient(webViewXClient);
+        setWebViewClient(new WebViewClient());
         EventCenter.getInstance().register(this);
     }
 
@@ -71,7 +70,7 @@ public class WebViewX extends WebView implements EventCenter.Register {
     }
 
     public void addLocalResource(String baseUrl, String baseFilePath) {
-        webViewXClient.addLocalResource(baseUrl, baseFilePath);
+        webViewXBridge.addLocalResource(baseUrl, baseFilePath);
     }
 
     public void setLoadOptions(JSONObject options) {
@@ -105,19 +104,10 @@ public class WebViewX extends WebView implements EventCenter.Register {
         webViewXBridge.addInterceptor(bridgeHandler);
     }
 
-    public void setWebViewClient(WebViewXClient client) {
-        super.setWebViewClient(client);
-    }
-
-    /**
-     * 请使用 {@link #setWebViewClient(WebViewXClient)}
-     */
-    @Deprecated
     @Override
     public void setWebViewClient(@NonNull WebViewClient client) {
-        super.setWebViewClient(client);
+        super.setWebViewClient(new WebViewXClientWrapper(webViewXBridge, client));
     }
-
 
     @Override
     public WebViewXBridge getWebViewXBridge() {

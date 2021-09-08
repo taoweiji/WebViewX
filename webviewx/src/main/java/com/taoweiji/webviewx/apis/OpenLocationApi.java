@@ -3,6 +3,8 @@ package com.taoweiji.webviewx.apis;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
@@ -13,7 +15,7 @@ public class OpenLocationApi extends Api {
     }
 
     @Override
-    public void invoke(ApiCaller caller) throws Exception {
+    public void invoke(@NonNull ApiCaller caller) throws Exception {
         // 纬度，范围为-90~90，负数表示南纬。使用 gcj02 国测局坐标系
         String type = caller.getParams().optString("type", "wgs84");
         double latitude = caller.getParams().optDouble("latitude");

@@ -1,5 +1,7 @@
 package com.taoweiji.webviewx.apis.storage;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.ApiCaller;
 
 public class GetStorage extends BaseStorage {
@@ -9,7 +11,7 @@ public class GetStorage extends BaseStorage {
     }
 
     @Override
-    public void invoke(ApiCaller caller) throws Exception {
+    public void invoke(@NonNull ApiCaller caller) throws Exception {
         String key = caller.getParams().optString("key");
         String value = getSharedPreferences(caller).getString(key, "");
         caller.successData(value);

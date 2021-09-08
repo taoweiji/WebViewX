@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
@@ -20,7 +22,7 @@ public class GetSystemInfoApi extends Api {
     }
 
     @Override
-    public void invoke(ApiCaller caller) throws Exception {
+    public void invoke(@NonNull ApiCaller caller) throws Exception {
         JSONObject json = new JSONObject();
         json.put("brand", Build.BRAND);
         json.put("model", Build.MODEL);

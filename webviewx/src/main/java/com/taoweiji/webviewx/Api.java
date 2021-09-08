@@ -27,6 +27,4 @@ public abstract class Api {
     protected void runOnUiThread(Runnable runnable) {
         new Handler(Looper.getMainLooper()).post(runnable);
     }
-
-
 }

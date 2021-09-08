@@ -209,6 +209,14 @@ public class WebViewXBridge {
         }
     }
 
+    /**
+     * @param baseUrl      映射的url路径 https://game.com/2048
+     * @param baseFilePath 支持本地文件及assets文件路径，格式如下：/data/data/com.xx/files/2048 or file:///android_asset/2048
+     */
+    public void addLocalResource(String baseUrl, String baseFilePath) {
+        this.localResource.addLocalResource(baseUrl, baseFilePath);
+    }
+
     public interface Interceptor {
         boolean invoke(@NonNull ApiCaller caller);
 

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
@@ -16,7 +18,7 @@ public final class GetNetworkTypeApi extends Api {
         return "getNetworkType";
     }
 
-    public void invoke(ApiCaller caller) {
+    public void invoke(@NonNull ApiCaller caller) {
         ConnectivityManager manager = (ConnectivityManager) caller.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         @SuppressLint("MissingPermission")
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();

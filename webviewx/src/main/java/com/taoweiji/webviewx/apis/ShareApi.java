@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
@@ -17,7 +19,7 @@ public class ShareApi extends Api {
     }
 
     @Override
-    public void invoke(ApiCaller caller) throws Exception {
+    public void invoke(@NonNull ApiCaller caller) throws Exception {
         String type = caller.getParams().optString("type");
         String title = caller.getParams().optString("title");
         String text = caller.getParams().optString("text");

@@ -1,5 +1,7 @@
 package com.taoweiji.webviewx.apis.storage;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.ApiCaller;
 
 public class ClearStorage extends BaseStorage {
@@ -9,7 +11,7 @@ public class ClearStorage extends BaseStorage {
     }
 
     @Override
-    public void invoke(ApiCaller caller) throws Exception {
+    public void invoke(@NonNull ApiCaller caller) throws Exception {
         getSharedPreferences(caller).edit().clear().apply();
         caller.success();
     }

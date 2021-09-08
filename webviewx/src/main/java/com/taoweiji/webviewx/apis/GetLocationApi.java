@@ -9,6 +9,8 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
@@ -25,7 +27,7 @@ public class GetLocationApi extends Api {
 
     @SuppressLint("MissingPermission")
     @Override
-    public void invoke(ApiCaller caller) throws Exception {
+    public void invoke(@NonNull ApiCaller caller) throws Exception {
 // 默认 wgs84，wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
         String type = caller.getParams().optString("type", "wgs84");
         // 传入 true 会返回高度信息，由于获取高度需要较高精确度，会减慢接口返回速度

@@ -1,5 +1,7 @@
 package com.taoweiji.webviewx.example.api;
 
+import androidx.annotation.NonNull;
+
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 
@@ -15,7 +17,7 @@ public class GetLoginInfoApi extends Api {
     }
 
     @Override
-    public void invoke(ApiCaller caller) throws JSONException {
+    public void invoke(@NonNull ApiCaller caller) throws JSONException {
         int id = caller.getParams().optInt("id");
         JSONObject json = new JSONObject();
         json.put("id", id);
