@@ -20,6 +20,8 @@ WebViewX：WebView 能力增强框架，提供易用的异步API，简化原生�
 
 ```groovy
 implementation 'io.github.taoweiji.webviewx:webviewx:+'
+// X5拓展
+// implementation 'io.github.taoweiji.webviewx:x5:+'
 ```
 
 #### 创建 WebView
@@ -33,6 +35,8 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         webView = new WebViewX(this);
+        // X5内核版本
+        // webView = new X5WebViewX(this);
         setContentView(webView);
     }
     @Override
