@@ -1,25 +1,25 @@
-package com.taoweiji.webviewx;
+package com.taoweiji.webviewx.x5;
 
 import android.graphics.Bitmap;
-import android.net.http.SslError;
 import android.os.Build;
 import android.os.Message;
 import android.view.KeyEvent;
-import android.webkit.ClientCertRequest;
-import android.webkit.HttpAuthHandler;
-import android.webkit.RenderProcessGoneDetail;
-import android.webkit.SafeBrowsingResponse;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
- class WebViewXClientWrapper extends WebViewClient {
+import com.taoweiji.webviewx.WebViewXBridge;
+import com.tencent.smtt.export.external.interfaces.ClientCertRequest;
+import com.tencent.smtt.export.external.interfaces.HttpAuthHandler;
+import com.tencent.smtt.export.external.interfaces.SslError;
+import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
+import com.tencent.smtt.export.external.interfaces.WebResourceError;
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
+
+class WebViewXClientWrapper extends WebViewClient {
     WebViewClient webViewClient;
     private final WebViewXBridge webViewXBridge;
 
@@ -75,7 +75,15 @@ import androidx.annotation.RequiresApi;
         if (response != null) {
             return response;
         }
-        return webViewXBridge.localResource.shouldInterceptRequest(view.getContext(), url);
+        android.webkit.WebResourceResponse res = webViewXBridge.localResource.shouldInterceptRequest(view.getContext(), url);
+        return convert(res);
+    }
+
+    private WebResourceResponse convert(android.webkit.WebResourceResponse res) {
+        if (res == null) {
+            return null;
+        }
+        return new WebResourceResponse(res.getMimeType(), res.getEncoding(), res.getData());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -89,7 +97,8 @@ import androidx.annotation.RequiresApi;
         if (request.getUrl() == null) {
             return null;
         }
-        return webViewXBridge.localResource.shouldInterceptRequest(view.getContext(), request.getUrl().toString());
+        android.webkit.WebResourceResponse res = webViewXBridge.localResource.shouldInterceptRequest(view.getContext(), request.getUrl().toString());
+        return convert(res);
     }
 
     @Override
@@ -168,9 +177,9 @@ import androidx.annotation.RequiresApi;
         return webViewClient.onRenderProcessGone(view, detail);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O_MR1)
-    @Override
-    public void onSafeBrowsingHit(WebView view, WebResourceRequest request, int threatType, SafeBrowsingResponse callback) {
-        webViewClient.onSafeBrowsingHit(view, request, threatType, callback);
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.O_MR1)
+//    @Override
+//    public void onSafeBrowsingHit(WebView view, WebResourceRequest request, int threatType, SafeBrowsingResponse callback) {
+//        webViewClient.onSafeBrowsingHit(view, request, threatType, callback);
+//    }
 }

@@ -21,10 +21,6 @@ class WebViewXBridgeInterface {
         return webViewXBridge.canIUse(apiName);
     }
 
-    private WebView getWebView() {
-        return webViewXBridge.webView;
-    }
-
     @JavascriptInterface
     public final int getJSVersion() {
         return 1;
@@ -33,7 +29,7 @@ class WebViewXBridgeInterface {
     @JavascriptInterface
     public final String getSource() {
         try {
-            InputStream is = webViewXBridge.webView.getContext().getAssets().open("webviewx/webviewx.js");
+            InputStream is = webViewXBridge.getContext().getAssets().open("webviewx/webviewx.js");
             if (is != null) {
                 return FileUtils.read(is);
             }
@@ -46,7 +42,7 @@ class WebViewXBridgeInterface {
 
     @JavascriptInterface
     public final void invoke(final String callerId, String apiName, final String paramsStr) {
-        ApiCaller caller = new ApiCaller(getWebView().getContext(), false, webViewXBridge.currentUrl, apiName) {
+        ApiCaller caller = new ApiCaller(webViewXBridge.getContext(), false, webViewXBridge.currentUrl, apiName) {
             public void onSuccess(final JSONObject data) {
                 callback("success", data);
                 callback("complete", null);
@@ -84,7 +80,7 @@ class WebViewXBridgeInterface {
     @JavascriptInterface
     public final String invokeSync(String apiName, final String paramsStr) {
         final String[] result = new String[1];
-        ApiCaller caller = new ApiCaller(getWebView().getContext(), true, webViewXBridge.currentUrl, apiName) {
+        ApiCaller caller = new ApiCaller(webViewXBridge.getContext(), true, webViewXBridge.currentUrl, apiName) {
             public void onSuccess(JSONObject data) {
                 if (data != null) {
                     result[0] = data.toString();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -36,8 +37,11 @@ public class WebViewXLocalResource {
 
     protected InputStream getInputStream(Context context, String path) {
         try {
-            path = path.replace("file:///android_asset/", "");
-            return context.getResources().getAssets().open(path);
+            if (path.startsWith("file:///android_asset/")) {
+                path = path.replace("file:///android_asset/", "");
+                return context.getResources().getAssets().open(path);
+            }
+            return new FileInputStream(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,13 +56,13 @@ public class WebViewXLocalResource {
         return MimeTypeUtils.getMimeType(mime);
     }
 
-    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+    public WebResourceResponse shouldInterceptRequest(Context context, String url) {
         String basePath = getMapperFilePath(url);
         if (url.endsWith("webviewx/webviewx.js")) {
-            return new WebResourceResponse(getMimeType(url), "utf-8", getInputStream(view.getContext(), "file:///android_asset/webviewx.js"));
+            return new WebResourceResponse(getMimeType(url), "utf-8", getInputStream(context, "file:///android_asset/webviewx/webviewx.js"));
         }
         if (basePath != null) {
-            return new WebResourceResponse(getMimeType(url), "utf-8", getInputStream(view.getContext(), basePath));
+            return new WebResourceResponse(getMimeType(url), "utf-8", getInputStream(context, basePath));
         }
         return null;
     }

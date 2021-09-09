@@ -40,6 +40,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation project(path: ':webviewx')
+    implementation project(path: ':x5')
 //    api project(path: ':navigation')
     implementation 'io.github.taoweiji.single-activity-navigation:navigation:0.1.3'
 

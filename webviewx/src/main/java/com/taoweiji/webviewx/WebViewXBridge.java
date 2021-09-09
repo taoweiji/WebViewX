@@ -1,6 +1,7 @@
 package com.taoweiji.webviewx;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -22,16 +23,16 @@ import java.util.Map;
 public class WebViewXBridge {
     static final String EVENT_INVOKE_CALLBACK = "WebViewX.invokeCallback";
 
-    WebView webView;
+    IWebView webView;
     String currentUrl;
     private final PageLifecycle pageLifecycle;
     private final List<Interceptor> interceptors = new ArrayList<>();
     final Map<String, Api> apis = new HashMap<>();
-    final WebViewXLocalResource localResource = new WebViewXLocalResource();
+    public final WebViewXLocalResource localResource = new WebViewXLocalResource();
 
 
     @SuppressLint("AddJavascriptInterface")
-    public WebViewXBridge(WebView webView) {
+    public WebViewXBridge(IWebView webView) {
         this.webView = webView;
         WebViewXBridgeInterface webViewXBridgeInterface = new WebViewXBridgeInterface(this);
         this.webView.addJavascriptInterface(webViewXBridgeInterface, "webViewXBridge");
@@ -164,7 +165,7 @@ public class WebViewXBridge {
         }
     }
 
-    final boolean canIUse(String apiName) {
+    public boolean canIUse(String apiName) {
         if (this.apis.containsKey(apiName)) {
             return true;
         }
@@ -215,6 +216,10 @@ public class WebViewXBridge {
      */
     public void addLocalResource(String baseUrl, String baseFilePath) {
         this.localResource.addLocalResource(baseUrl, baseFilePath);
+    }
+
+    public Context getContext() {
+        return webView.getContext();
     }
 
     public interface Interceptor {

@@ -1,47 +1,52 @@
-package com.taoweiji.webviewx;
+package com.taoweiji.webviewx.x5;
 
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.taoweiji.webviewx.Api;
+import com.taoweiji.webviewx.EventCenter;
+import com.taoweiji.webviewx.IWebView;
+import com.taoweiji.webviewx.WebViewXBridge;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
+
 import org.json.JSONObject;
 
-public class WebViewX extends WebView implements EventCenter.Register, IWebView {
+public class X5WebViewX extends WebView implements EventCenter.Register, IWebView {
     private WebViewXBridge webViewXBridge;
     //    private WebViewXClient webViewXClient;
     private String eventRegisterId;
 
-    public WebViewX(@NonNull Context context) {
+    public X5WebViewX(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public WebViewX(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public X5WebViewX(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public WebViewX(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public X5WebViewX(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public WebViewX(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//    public X5WebViewX(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+//        super(context, attrs, defStyleAttr, defStyleRes);
+//        init();
+//    }
 
-    public WebViewX(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, boolean privateBrowsing) {
-        super(context, attrs, defStyleAttr, privateBrowsing);
-        init();
-    }
+//    public X5WebViewX(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, boolean privateBrowsing) {
+//        super(context, attrs, defStyleAttr, privateBrowsing);
+//        init();
+//    }
 
     private void init() {
         getSettings().setJavaScriptEnabled(true);

@@ -5,3 +5,4 @@ include ':webviewx'
 
 //include ":navigation"
 //project(":navigation").projectDir = new File("/Users/wiki/Documents/source/navigation/navigation")
+include ':x5'

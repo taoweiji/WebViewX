@@ -26,7 +26,7 @@
             }
         })
         webViewX.registerEvent('event', function (data) {
-            alert(JSON.stringify(data));
+            console.error(JSON.stringify(data));
         })
         webViewX.postEvent('event', { 'data': "Hello" })
         webViewX.registerEvent('testStickyEvent', function (data) {

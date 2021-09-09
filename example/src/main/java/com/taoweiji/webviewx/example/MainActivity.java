@@ -33,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, WebViewXBridgeActivity.class));
             }
         });
+        adapter.add("X5", new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(MainActivity.this, X5WebViewXActivity.class));
+            }
+        });
+
         adapter.add("网页离线运行：2048", new Runnable() {
             @Override
             public void run() {

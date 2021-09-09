@@ -1,38 +1,37 @@
 package com.taoweiji.webviewx.example;
 
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
+import static android.view.MenuItem.SHOW_AS_ACTION_NEVER;
 
 import android.Manifest;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebChromeClient;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
-import com.taoweiji.webviewx.WebViewX;
 import com.taoweiji.webviewx.WebViewXBridge;
+import com.taoweiji.webviewx.x5.X5WebViewX;
+import com.tencent.smtt.sdk.WebChromeClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
 
-public class WebViewXBridgeActivity extends AppCompatActivity {
-    WebViewX webView;
+public class X5WebViewXActivity extends AppCompatActivity {
+    X5WebViewX webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        webView = new WebViewX(this);
+        webView = new X5WebViewX(this);
         setContentView(webView);
         webView.setWebChromeClient(new WebChromeClient());
         webView.addInterceptor(new WebViewXBridge.Interceptor() {
@@ -70,6 +69,7 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         webView.loadUrl("file:///android_asset/test.html");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
         }
@@ -81,7 +81,7 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()){
+        if (webView.canGoBack()) {
             webView.goBack();
             return;
         }
@@ -90,14 +90,17 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(1, 1, 1, "发送事件").setShowAsAction(SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, 1, 1, "检查X5版本").setShowAsAction(SHOW_AS_ACTION_NEVER);
+        menu.add(1, 2, 1, "播放H5视频").setShowAsAction(SHOW_AS_ACTION_NEVER);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == 1) {
-            webView.postEvent("event", new JSONObject(Collections.singletonMap("data", "hello world")));
+            webView.loadUrl("https://soft.imtt.qq.com/browser/tes/feedback.html");
+        } else if (item.getItemId() == 2) {
+            webView.loadUrl("https://yongling8808.github.io/test/video_demo/video_gesture.html");
         }
         return super.onOptionsItemSelected(item);
     }

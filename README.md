@@ -57,40 +57,14 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
 
 ### JS侧
 
-使用 WebViewX框架需要在H5中引入 webviewx.js 文件，提供2种引入方式。
+使用 WebViewX框架需要在H5中引入 webviewx.js 文件。
 
-#### 直接引入js文件
-
-需要把 [js文件](https://github.com/taoweiji/WebViewX/blob/master/webviewx/src/main/assets/webviewx/webviewx.js) 拷贝到web工程中，不用担心js版本和客户端版本不一致问题，在客户端使用的时候会自动加载客户端匹配的 js 文件。
+需要把 [js文件](https://github.com/taoweiji/WebViewX/blob/master/webviewx/src/main/assets/webviewx/webviewx.js) 拷贝到web工程中。也可以直接使用下面代码，客户端会自动加载本地的 webviewx.js 文件。
 
 ```html
 <html>
 <body>
-    <script src="js/webviewx.js"></script>
-<body>
-</html>
-```
-#### 动态注册
-
-动态注册的方式是从客户端的sdk获取当前的sdk的js框架代码，通过eval方式注册，好处是不用添加js文件，缺点是不方便调试。
-
-```html
-<html>
-<body>
-    <script>
-        window.webViewX = function () {
-            if (window['webViewXBridge'] == undefined) {
-                return {
-                    registerPageEvent(data) { },
-                    registerEvent(name, data) { },
-                    invoke(name, data) { },
-                    invokeSync(name, data) { },
-                    postEvent(name, data){ }
-                };
-            }
-            return eval(webViewXBridge.getSource());
-        }();
-    </script>
+    <script src="webviewx/webviewx.js"></script>
 <body>
 </html>
 ```
