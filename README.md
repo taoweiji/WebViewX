@@ -41,7 +41,7 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         webView = new WebViewX(this);
         // X5内核版本
-        // webView = new X5WebViewX(this);
+        // webView = new WebViewX5(this);
         setContentView(webView);
     }
     @Override
