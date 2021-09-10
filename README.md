@@ -10,6 +10,11 @@ WebViewX：WebView 能力增强框架，提供易用的异步API，简化原生�
 - 支持同步、异步调用API，支持全局注册API、局部注册API，支持API权限控制；
 - 提供多个常用 API。
 
+### 示例
+[示例APK下载](https://github.com/taoweiji/WebViewX/releases/download/0.4.1/example-release.apk)
+
+![webviewx](https://user-images.githubusercontent.com/3044176/132800829-f236f8e7-d441-4d51-ae1d-6313490ba518.png)
+
 
 
 ## 基础准备
