@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.taoweiji.navigation.BundleBuilder;
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
-import com.taoweiji.webviewx.example.program.CopyMiniProgram;
+import com.taoweiji.webviewx.example.program.MiniProgramActivity;
 
 public class NavigateToApi extends Api {
     @Override
@@ -18,9 +18,13 @@ public class NavigateToApi extends Api {
     @Override
     public void invoke(@NonNull ApiCaller caller) throws Exception {
         String url = caller.getParams().getString("url");
-        CopyMiniProgram.WebViewAbility ability = (CopyMiniProgram.WebViewAbility) caller.getExtras().get("ability");
+        MiniProgramActivity.WebViewAbility ability = (MiniProgramActivity.WebViewAbility) caller.getExtras().get("ability");
         Bundle bundle = new BundleBuilder().putAll(ability.getArguments()).put("url", url).build();
-        runOnUiThread(() -> ability.findNavController().navigate(new CopyMiniProgram.WebViewAbility(), bundle));
+        if (ability.findNavController().getStackCount() >= 9) {
+            caller.fail(new Exception("最多可以打开9个页面"));
+            return;
+        }
+        runOnUiThread(() -> ability.findNavController().navigate(new MiniProgramActivity.WebViewAbility(), bundle));
         caller.success();
     }
 

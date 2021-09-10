@@ -1,6 +1,5 @@
 package com.taoweiji.webviewx.example;
 
-import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static android.view.MenuItem.SHOW_AS_ACTION_NEVER;
 
 import android.Manifest;
@@ -17,7 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 import com.taoweiji.webviewx.WebViewXBridge;
-import com.taoweiji.webviewx.x5.X5WebViewX;
+import com.taoweiji.webviewx.example.api.FinishApi;
+import com.taoweiji.webviewx.x5.WebViewX5;
 import com.tencent.smtt.sdk.WebChromeClient;
 
 import org.json.JSONException;
@@ -25,23 +25,19 @@ import org.json.JSONObject;
 
 import java.util.Collections;
 
-public class X5WebViewXActivity extends AppCompatActivity {
-    X5WebViewX webView;
+public class WebViewX5Activity extends AppCompatActivity {
+    WebViewX5 webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        webView = new X5WebViewX(this);
+        webView = new WebViewX5(this);
         setContentView(webView);
         webView.setWebChromeClient(new WebChromeClient());
         webView.addInterceptor(new WebViewXBridge.Interceptor() {
             @Override
             public boolean invoke(@NonNull ApiCaller caller) {
                 switch (caller.getApiName()) {
-                    case "close":
-                        finish();
-                        caller.success();
-                        return true;
                     case "getTestData":
                         caller.successData("Hello World");
                         return true;
@@ -128,27 +124,5 @@ public class X5WebViewXActivity extends AppCompatActivity {
         super.finish();
     }
 
-    public static class FinishApi extends Api {
-        Activity activity;
 
-        public FinishApi(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        public String name() {
-            return "finish";
-        }
-
-        @Override
-        public boolean allowInvokeSync() {
-            return true;
-        }
-
-        @Override
-        protected void invoke(@NonNull ApiCaller caller) throws Exception {
-            activity.finish();
-            caller.success();
-        }
-    }
 }

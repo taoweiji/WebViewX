@@ -1,7 +1,7 @@
 <html>
 <body>
-    <script src="webviewx/webviewx.js"></script>
-    <script>
+<script src="webviewx/webviewx.js"></script>
+<script>
         function request(){
             webViewX.invoke('getData',{
                 id: 101,
@@ -10,8 +10,12 @@
                 }
             })
         }
-        function finish(){
-            webViewX.invoke('finish')
+        function navigateBack(){
+            webViewX.invoke('navigateBack',{
+                fail(err) {
+                    alert(err)
+                }
+            })
         }
         function error(){
             webViewX.invoke('testError',{
@@ -41,10 +45,12 @@
             })
         }
 
-    </script>
-    <button onclick="request()">点击</button>
-    <button onclick="finish()">关闭页面</button>
-    <button onclick="error()">错误</button>
-    <button onclick="navigateTo()">跳转页面</button>
+
+
+</script>
+<button onclick="request()">获取数据</button>
+<button onclick="navigateBack()">关闭页面</button>
+<button onclick="error()">错误</button>
+<button onclick="navigateTo()">跳转页面</button>
 </body>
 </html>

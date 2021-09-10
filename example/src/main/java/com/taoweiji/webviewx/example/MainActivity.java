@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.taoweiji.navigation.ViewUtils;
-import com.taoweiji.webviewx.example.program.CopyMiniProgram;
+import com.taoweiji.webviewx.example.program.MiniProgramActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +27,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(list);
 
         ListAdapter adapter = new ListAdapter();
-        adapter.add("异步回调API", new Runnable() {
+        adapter.add("WebView", new Runnable() {
             @Override
             public void run() {
                 startActivity(new Intent(MainActivity.this, WebViewXBridgeActivity.class));
             }
         });
-        adapter.add("X5", new Runnable() {
+        adapter.add("X5WebView", new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(MainActivity.this, X5WebViewXActivity.class));
+                startActivity(new Intent(MainActivity.this, WebViewX5Activity.class));
             }
         });
 
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.add("模拟小程序架构", new Runnable() {
             @Override
             public void run() {
-                CopyMiniProgram.start(MainActivity.this
+                MiniProgramActivity.start(MainActivity.this
                         , "file:///android_asset/taoweiji.com/"
                         , "http://taoweiji.com/"
                         , "http://taoweiji.com/index.html?userId=1");

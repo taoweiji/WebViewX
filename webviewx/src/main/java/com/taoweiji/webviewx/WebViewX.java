@@ -12,10 +12,9 @@ import androidx.annotation.RequiresApi;
 
 import org.json.JSONObject;
 
-public class WebViewX extends WebView implements EventCenter.Register, IWebView {
+public class WebViewX extends WebView implements IWebView {
     private WebViewXBridge webViewXBridge;
-    //    private WebViewXClient webViewXClient;
-    private String eventRegisterId;
+
 
     public WebViewX(@NonNull Context context) {
         super(context);
@@ -45,9 +44,8 @@ public class WebViewX extends WebView implements EventCenter.Register, IWebView 
 
     private void init() {
         getSettings().setJavaScriptEnabled(true);
-        webViewXBridge = new WebViewXBridge(this);
+        webViewXBridge = new WebViewXBridge((IWebView) this);
         setWebViewClient(new WebViewClient());
-        EventCenter.getInstance().register(this);
     }
 
     @Override
@@ -65,7 +63,6 @@ public class WebViewX extends WebView implements EventCenter.Register, IWebView 
     @Override
     public void destroy() {
         webViewXBridge.destroy();
-        EventCenter.getInstance().unregister(this);
         super.destroy();
     }
 
@@ -97,7 +94,7 @@ public class WebViewX extends WebView implements EventCenter.Register, IWebView 
     }
 
     public void broadcastEvent(String name, JSONObject event) {
-        EventCenter.getInstance().broadcastEvent(name, event);
+        webViewXBridge.broadcastEvent(name, event);
     }
 
     public void addInterceptor(WebViewXBridge.Interceptor bridgeHandler) {
@@ -109,21 +106,12 @@ public class WebViewX extends WebView implements EventCenter.Register, IWebView 
         super.setWebViewClient(new WebViewXClientWrapper(webViewXBridge, client));
     }
 
-    @Override
     public WebViewXBridge getWebViewXBridge() {
         return webViewXBridge;
     }
 
     public void setEventRegisterId(String eventRegisterId) {
-        this.eventRegisterId = eventRegisterId;
-    }
-
-    @Override
-    public String getEventRegisterId() {
-        if (eventRegisterId != null) {
-            return eventRegisterId;
-        }
-        return String.valueOf(this.hashCode());
+        webViewXBridge.setEventRegisterId(eventRegisterId);
     }
 
     public final void registerApi(Api... api) {
@@ -135,4 +123,7 @@ public class WebViewX extends WebView implements EventCenter.Register, IWebView 
         super.loadUrl(url);
     }
 
+    public String getEventRegisterId() {
+        return webViewXBridge.getEventRegisterId();
+    }
 }

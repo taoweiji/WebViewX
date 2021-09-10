@@ -20,6 +20,7 @@ import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
 import com.taoweiji.webviewx.WebViewX;
 import com.taoweiji.webviewx.WebViewXBridge;
+import com.taoweiji.webviewx.example.api.FinishApi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,29 +124,5 @@ public class WebViewXBridgeActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-    }
-
-    public static class FinishApi extends Api {
-        Activity activity;
-
-        public FinishApi(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        public String name() {
-            return "finish";
-        }
-
-        @Override
-        public boolean allowInvokeSync() {
-            return true;
-        }
-
-        @Override
-        protected void invoke(@NonNull ApiCaller caller) throws Exception {
-            activity.finish();
-            caller.success();
-        }
     }
 }

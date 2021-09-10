@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,10 +31,10 @@ import com.taoweiji.webviewx.WebViewX;
 import com.taoweiji.webviewx.WebViewXBridge;
 import com.taoweiji.webviewx.example.R;
 
-public class CopyMiniProgram extends AppCompatActivity {
+public class MiniProgramActivity extends AppCompatActivity {
 
     public static void start(Context context, String path, String baseUrl, String url) {
-        Intent intent = new Intent(context, CopyMiniProgram.class);
+        Intent intent = new Intent(context, MiniProgramActivity.class);
         intent.putExtra("path", path);
         intent.putExtra("baseUrl", baseUrl);
         intent.putExtra("url", url);
@@ -128,6 +127,11 @@ public class CopyMiniProgram extends AppCompatActivity {
                 @Override
                 public boolean invoke(@NonNull ApiCaller caller) {
                     caller.getExtras().put("ability", WebViewAbility.this);
+                    switch (caller.getApiName()) {
+                        case "getData":
+                            caller.successData("Hello");
+                            return true;
+                    }
                     return false;
                 }
 

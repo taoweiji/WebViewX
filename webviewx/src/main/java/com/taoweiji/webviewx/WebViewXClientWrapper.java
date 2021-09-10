@@ -19,7 +19,7 @@ import android.webkit.WebViewClient;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
- class WebViewXClientWrapper extends WebViewClient {
+class WebViewXClientWrapper extends WebViewClient {
     WebViewClient webViewClient;
     private final WebViewXBridge webViewXBridge;
 

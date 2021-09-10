@@ -176,10 +176,4 @@ class WebViewXClientWrapper extends WebViewClient {
     public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
         return webViewClient.onRenderProcessGone(view, detail);
     }
-
-//    @RequiresApi(api = Build.VERSION_CODES.O_MR1)
-//    @Override
-//    public void onSafeBrowsingHit(WebView view, WebResourceRequest request, int threatType, SafeBrowsingResponse callback) {
-//        webViewClient.onSafeBrowsingHit(view, request, threatType, callback);
-//    }
 }

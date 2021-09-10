@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WebViewXBridge {
+public class WebViewXBridge implements EventCenter.Register{
     static final String EVENT_INVOKE_CALLBACK = "WebViewX.invokeCallback";
 
     IWebView webView;
@@ -29,6 +29,7 @@ public class WebViewXBridge {
     private final List<Interceptor> interceptors = new ArrayList<>();
     final Map<String, Api> apis = new HashMap<>();
     public final WebViewXLocalResource localResource = new WebViewXLocalResource();
+    private String eventRegisterId;
 
 
     @SuppressLint("AddJavascriptInterface")
@@ -37,6 +38,27 @@ public class WebViewXBridge {
         WebViewXBridgeInterface webViewXBridgeInterface = new WebViewXBridgeInterface(this);
         this.webView.addJavascriptInterface(webViewXBridgeInterface, "webViewXBridge");
         this.pageLifecycle = new PageLifecycle(this);
+        EventCenter.getInstance().register(this);
+    }
+
+    public WebViewXBridge(WebView webView) {
+        this(new IWebView() {
+            @Override
+            public void loadUrl(String url) {
+                webView.loadUrl(url);
+            }
+
+            @SuppressLint({"JavascriptInterface", "AddJavascriptInterface"})
+            @Override
+            public void addJavascriptInterface(Object obj, String name) {
+                webView.addJavascriptInterface(obj, name);
+            }
+
+            @Override
+            public Context getContext() {
+                return webView.getContext();
+            }
+        });
     }
 
     public void addInterceptor(Interceptor interceptor) {
@@ -51,6 +73,7 @@ public class WebViewXBridge {
 
     public final void destroy() {
         getLifecycle().onUnload();
+        EventCenter.getInstance().unregister(this);
         this.webView = null;
     }
 
@@ -125,6 +148,7 @@ public class WebViewXBridge {
 
     public void onResume() {
         getLifecycle().onShow();
+
     }
 
     public void onPause() {
@@ -220,6 +244,27 @@ public class WebViewXBridge {
 
     public Context getContext() {
         return webView.getContext();
+    }
+
+    @Override
+    public WebViewXBridge getWebViewXBridge() {
+        return this;
+    }
+
+    public void setEventRegisterId(String eventRegisterId) {
+        this.eventRegisterId = eventRegisterId;
+    }
+
+    @Override
+    public String getEventRegisterId() {
+        if (eventRegisterId != null) {
+            return eventRegisterId;
+        }
+        return String.valueOf(this.hashCode());
+    }
+
+    public void broadcastEvent(String name, JSONObject event) {
+        EventCenter.getInstance().broadcastEvent(name, event);
     }
 
     public interface Interceptor {

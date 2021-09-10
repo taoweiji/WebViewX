@@ -19,7 +19,7 @@
                 android:name=".WebViewXBridgeActivity"
                 android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
-                android:name=".X5WebViewXActivity"
+                android:name=".WebViewX5Activity"
                 android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
                 android:name=".OfflineWebViewActivity"
@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".program.CopyMiniProgram"
+                android:name=".program.MiniProgramActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
     </application>

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.taoweiji.webviewx.Api;
 import com.taoweiji.webviewx.ApiCaller;
-import com.taoweiji.webviewx.example.program.CopyMiniProgram;
+import com.taoweiji.webviewx.example.program.MiniProgramActivity;
 
 public class NavigateToMiniProgramApi extends Api {
     @Override
@@ -17,7 +17,7 @@ public class NavigateToMiniProgramApi extends Api {
         String baseUrl = caller.getParams().getString("baseUrl");
         String url = caller.getParams().getString("url");
         String path = caller.getParams().getString("path");
-        CopyMiniProgram.start(caller.getContext(), path, baseUrl, url);
+        MiniProgramActivity.start(caller.getContext(), path, baseUrl, url);
         caller.success();
     }
 
